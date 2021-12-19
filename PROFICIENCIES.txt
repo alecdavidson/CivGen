@@ -1,0 +1,104 @@
+103
+Acrobatics
+Alchemist's Supplies
+Animal Handling
+Arcana
+Athletics
+Bagpipes
+Battleaxe
+Blowgun
+Brewer's Supplies
+Calligrapher's Supplies
+Carpenter's Tools
+Cartographer's Tools
+Club
+Cobbler's Tools
+Cook's Utensils
+Dagger
+Dart
+Deception
+Dice Set
+Disguise Kit
+Dragonchess Set
+Drum
+Dulcimer
+Flail
+Flute
+Forgery Kit
+Glaive
+Glassblower's Tools
+Greataxe
+Greatclub
+Greatsword
+Halberd
+Hand Crossbow
+Handaxe
+Heavy Armor
+Heavy Crossbow
+Herbalism Kit
+History
+Horn
+Improvised Weapon
+Infernal
+Insight
+Intimidation
+Investigation
+Javelin
+Jeweler's Tools
+Lance
+Land Vehicles
+Leatherworker's Tools
+Light Armor
+Light Crossbow
+Light Hammer
+Longbow
+Longsword
+Lute
+Lyre
+Mace
+Martial Weapons
+Mason's Tools
+Maul
+Medicine
+Medium Armor
+Morningstar
+Nature
+Navigator's Tools
+Net
+Painter's Supplies
+Pan Flute
+Perception
+Performance
+Persuasion
+Pike
+Playing Card Set
+Poisoner's kit
+Potter's Tools
+Quarterstaff
+Rapier
+Religion
+Scimitar
+Shawm
+Shields
+Shortbow
+Shortsword
+Sickle
+Simple Weapons
+Sleight of Hand
+Sling
+Smith's Tools
+Spear
+Stealth
+Survival
+Thieves' Tools
+Three-Dragon Ante Set
+Tinker's Tools
+Trident
+Unarmed Strike
+Viol
+War Pick
+Warhammer
+Water Vehicles
+Weaver's Tools
+Whip
+Woodcarver's Tools

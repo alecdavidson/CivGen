@@ -1,0 +1,273 @@
+44
+Amphibious
+Can’T Be Poisoned
+Climb Speed 20 Ft
+Climb Speed 30 Ft
+Climb Speed 40 Ft
+Darkvision 30 Ft.
+Darkvision 60 Ft.
+Darkvision 120 Ft.
+Dwarven Resilience
+Eldritch Resilience
+Fey Ancestry
+Gnome Cunning
+Halfling Nimbleness
+Hold Breath
+Infernal Legacy
+Innate Spellcasting
+Keen Hearing And Smell
+Keen Smell
+Large Size
+Medium Size
+Nimbleness
+Relentless Endurance
+Small Size
+Speaks Abyssal
+Speaks Aquan
+Speaks Draconic
+Speaks Dwarvish
+Speaks Elvish
+Speaks Giant
+Speaks Gnomish
+Speaks Goblin
+Speaks Halfling
+Speaks Infernal
+Speaks One Elemental Language
+Speaks Orc
+Speaks Sylvan
+Speaks Undercommon
+Spell Damping
+Stonecunning
+Sunlight Sensitivity
+Swim Speed 20 Ft.
+Swim Speed 30 Ft.
+Swim Speed 40 Ft.
+Trance
+
+
+
+
+Light Hooves
+Woodfriend
+darkvision 60 ft.
+speed 40 ft.
+speaks Common and Elvish
+Frenzy
+Keen Smell
+bite attack action
+darkvision 60 ft.
+speed 40 ft.
+speaks Common and Giant
+Humanoid Torso
+Pike Charge
+Quadruped
+hoof attack action
+proficiency in the Survival skill
+monstrosity type
+Large size
+speed 40 ft.
+speaks Centaur and one other language
+Humanoid Heritage
+Hunger for Flesh
+Sunlight Sensitivity
+Undead Vitality
+bite attack action
+darkvision 60 ft.
+speaks Common and Darakhul
+Eldritch Resilience
+Insanity
+Sunlight Sensitivity
+Small size
+darkvision 120 ft.
+speaks Dwarvish and either Common or Undercommon
+Dark Thirst
+Predatory Charm
+Undead Resistance
+darkvision 60 ft.
+speaks Common
+Breath Weapon
+Damage Resistance
+Draconic Ancestry
+speaks Common and Draconic
+Resilient Scales
+one cantrip based on subrace
+proficiency in the Persuasion skill
+speed 25 (not slowed by heavy armor)
+darkvision 60 ft.
+speaks Common and Draconic
+Fey Ancestry
+Innate Spellcasting
+Sunlight Sensitivity
+darkvision 120ft.
+speaks Elvish and Undercommon
+Alien Mind
+Strange and Deadly Surroundings
+Twisted
+Small size
+darkvision 60 ft.
+speaks Common and Goblin
+Dwarven Resilience
+Stonecunning
+speed 25ft.
+darkvision 60ft.
+speaks Common and Dwarvish
+Fey Ancestry
+Trance
+darkvision 60 ft.
+proficiency in the Perception skill
+speaks Common and Elvish
+Hardy
+Keen Smell
+resistance to poison
+defensive quills reaction
+Small size
+darkvision 60 ft.
+speaks Common and Erina
+Constructed Body
+Flesh of Steel
+Solid Construction
+Rampage
+darkvision 60 ft.
+Bully
+Live to Fight Another Day
+Scent
+Obsequious or Scavenge
+darkvision 60 ft.
+speaks Common and Gnoll
+Gnome Cunning
+Small size
+speed 25 ft.
+darkvision 60 ft.
+speaks Common and Gnomish
+Gnome Cunning
+Innate Spellcasting
+Stone Camouflage
+Small size
+speed 20 ft.
+darkvision 120 ft.
+speaks Gnomish Terran and Undercommon
+Nimble Escape
+Small size
+darkvision 60 ft.
+speaks Common and Goblin
+Blind Senses
+Keen Hearing and Smell
+Stone Camouflage
+can’t be blinded
+blindsight 30 ft. or 10 ft. while deafened (blind beyond this radius)
+speaks Undercommon
+proficiency in the Persuasion skill
+Elemental Strike and Protection of the Jinn or Favor of the Jinn and Walker
+darkvision 60 ft.
+speaks Common and one Elemental language
+Fey Ancestry
+darkvision 60 ft.
+proficiency in two skills
+speaks Common and Elvish
+Relentless Endurance
+darkvision 60 ft.
+proficiency in the Intimidation skill
+speaks Common and Orc
+Brave
+Halfling Nimbleness
+Lucky
+Small size
+speed 25ft.
+speaks Common and Halfling
+Martial Advantage
+darkvision 60 ft.
+speaks Common and Goblin
+Contained Fury
+Plantborn
+Roots of the Past
+plant type
+darkvision 60 ft.
+speaks Common and Sylvan
+Pack Tactics
+Sunlight Sensitivity
+Small size
+darkvision 60 ft.
+speaks Common and Draconic
+Serpent Strike
+Snake Body
+proficiency in the Deception and Intimidation skills
+monstrosity type
+darkvision 60 ft
+climb speed 20 ft
+swim speed 20 ft
+speaks Abyssal and Common
+Hold Breath
++3 natural armor bonus to AC
+speed 30 ft.
+swim 30 ft.
+speaks Draconic
+Amphibious
+speed 10 ft.
+swim 40 ft.
+speaks Aquan and Common
+Charge
+Labyrinth Sense
+horn attack action
+Medium size
+darkvision 60 ft.
+speaks Minotaur and one other language.
+Aggressive
+darkvision 60 ft.
+speaks Common and Orc
+Arcane Heritage
+Spell Damping
+proficiency in the Arcana skill
+speaks common
+Nimbleness
+Pack Tactics
+proficiency in the Animal Handling Arcana and Perception skills
+Small size
+speed 25 ft.
+darkvision 60 ft.
+speaks Common
+Mimicry
+Sudden Attack
+proficiency in the Deception and Stealth skills
+speaks Common and Huginn’s Speech
+Blood Frenzy
+Limited Amphibiousness
+Shark Telepathy
+bite and claw attack actions
++2 natural armor bonus to AC
+swim speed 40
+darkvision 120 ft.
+Fey Ancestry
+Path of Shadows
+Sunlight Sensitivity
+Trance
+Traveler in Darkness
+darkvision 60 ft.
+speaks Common Elvish and Umbral
+Vulnerable to bludgeoning damage
+immune to poison damage and exhaustion
+can’t be poisoned
+darkvision 60 ft.
+can’t speak but understands the languages it knew in life
+Infernal Legacy
+resistance to fire damage
+darkvision 60 ft.
+speaks Common and Infernal
+Gliding Wings
+proficiency in the Perception and Stealth skills
+claw attack action
++1 natural armor bonus to AC
+speaks Tosculi and one other language.
+Inhuman Vigor
+proficiency in the Intimidation skill
+Spirit Whispers or Thick Hide
+bite and claw attack actions
+darkvision 60 ft.
+speaks Common
+Natural Shapechanger
+darkvision 60 ft.
+speaks Common and Sylvan
+Undead Fortitude
+immune to poison damage
+can’t be poisoned
+darkvision 60 ft.
+can’t speak but understands the languages it knew in life
