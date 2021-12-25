@@ -5,6 +5,7 @@ Scripts/
 
 # Don't track these files
 pyvenv.cfg
+update_db.py
 
 
 # Compiled source #

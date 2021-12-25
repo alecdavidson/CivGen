@@ -1,82 +1,14 @@
+## Import Modules
+import argparse, random, sqlite3 as sl, sys
 
+## Global References
+# Connect to DBs
+resources = sl.connect('resources.db')
 
-
-"""
-$CITY_NAME is a $COMMUNITY_SIZE with a large focus on its $SPERM(5).
-This $COMMUNITY_SIZE(3) is governed by $POLITICAL(5) where it's main export is $ECONOMIC(8).
-$MILITARY(4) oversees all conflict in $CITY_NAME.
-The locals of $CITY_NAME spend their free time at one of its many $SOCIAL(5).
-Those who live here often find themselves $RELIGION(4), but are tolerant of others beliefs.
-
-The families that have been here for generations tend to have one or more of the following racial features:
-RACIAL_FEATURE(5x)
-
-Anyone who has spent a decent amount of time here, likely has developed one or more of the following skills:
-PROFICIENCIES(5x)
-
-Adventurers who have found their start in $CITY_NAME tend to become 5E_CLASS(116) or 5E_CLASS(116)
-"""
-##Import Modules
-import argparse, os, random, sys
-
-##Global References
-#Lists
-COMMUNITY_SIZE_LIST = [
-	'Village',
-	'Town',
-	'City'
-]
-SPERM_LIST = [
-	'Social Activities',
-	'Politics',
-	'Economy',
-	'Religion',
-	'Military'
-]
-SOCIAL_LIST = [
-	'Taverns',
-	'Theater',
-	'Museum',
-	'Library',
-	'Restaurants'
-]
-POLITICAL_LIST = [
-	'A Democratically Elected Leader',
-	'The Monarchy',
-	'A Military Government',
-	'Anarchy',
-	'An Oligarchy'
-]
-ECONOMIC_LIST = [
-	'Agriculture',
-	'Farming',
-	'Fishing',
-	'Fashion',
-	'Technology',
-	'Travel',
-	'Mining',
-	'Lumber'
-]
-RELIGION_LIST = [
-	'Monotheistic',
-	'Polytheistic',
-	'Atheistic',
-	'Agnostic'
-]
-MILITARY_LIST = [
-	'A Local Militia',
-	'A Royal Guard Post',
-	'A Hunting Party',
-	'A Formal Town Guard'
-]
-
-#Variables
-path = os.getcwd()
-
+# Define Classes
 class Civilization():
-
-	def __init__(self, CITY_NAME="", COMMUNITY_SIZE="", SPERM="", POLITICAL="", ECONOMIC="", MILITARY="", SOCIAL="", RELIGION="", RACIAL_FEATURE_LIST = [], PROFICIENCIES_LIST = []):
-		self.CITY_NAME = CITY_NAME
+	def __init__(self, CIV_NAME="", COMMUNITY_SIZE="", SPERM="", POLITICAL="", ECONOMIC="", MILITARY="", SOCIAL="", RELIGION="", RACIAL_FEATURE_LIST = [], PROFICIENCIES_LIST = [], SUBCLASSES_LIST = []):
+		self.CIV_NAME = CIV_NAME
 		self.COMMUNITY_SIZE = COMMUNITY_SIZE
 		self.SPERM = SPERM
 		self.POLITICAL = POLITICAL
@@ -86,84 +18,98 @@ class Civilization():
 		self.RELIGION = RELIGION
 		self.RACIAL_FEATURE_LIST = RACIAL_FEATURE_LIST
 		self.PROFICIENCIES_LIST =  PROFICIENCIES_LIST
+		self.SUBCLASSES_LIST =  SUBCLASSES_LIST
+		# Use the name of the Civilization as a seed for random
+		random.seed(self.CIV_NAME)
 
-	##Functions
-	#Get a random line from an external file
-	def GET_EXTERNAL_RANDOM(self, rsv):
-	    file_h = open(f"{path}\{rsv}.txt")
-	    limit = file_h.readline()
-	    limit = limit.replace('\n', '' )
-	    limit = int(limit)
-	    line = random.randint(0, limit - 1)
+	## Functions
+	# Get a single random entry from DB
+	def GET_DB_RANDOM(self, table):
+		# Just need to know what table to use for the lookup
+		with resources:
+			# Get the total size of the table
+			limit = resources.execute(f'select count() from {table};')
+			# Format for funcitonality
+			limit = [i[0] for i in limit][0]
+			# Random entry
+			id = random.randint(1,limit)
+			# Grab entry
+			try:
+				#Most of these lists use name as their key
+				entry = resources.execute(f'select name from {table} where id = {id};')
+				entry = [i[0] for i in entry][0]
+			except:
+				#I decided it was a good idea to do Class/Subclass differently
+				entry = resources.execute(f'select class,subclass from {table} where id = {id};')
+				temp = []
+				for i in entry:
+					temp.append(i[0] + " (" + i[1] + ")")
+				entry = temp
+				#self.SUBCLASSES_LIST.replace('[','').replace(']','')
+			# Final Result is returned
+			return entry
 
-	    for x in range(line):
-	        file_h.readline()
-	    phrase = file_h.readline()
-	    phrase = phrase.replace('\n', '')
+	# Sometimes we need more than one entry for a field
+	def BUILD_RANDOM_LIST(self, table, total):
+		list = []
+		# Use for/while loops to check for duplicates
+		for i in range(total):
+			temp = self.GET_DB_RANDOM(table)
+			while temp in list: temp = self.GET_DB_RANDOM(table)
+			list.append(temp)
+		return list
 
-	    return(phrase)
+	# Main function
+	def BUILD_CIVILIZATION(self):
+		# First generate something for each field based ONLY on the seed (Civilization Name)
+		COMMUNITY_SIZE = self.GET_DB_RANDOM(table='COMMUNITY_SIZE_LIST')
+		SPERM = self.GET_DB_RANDOM(table='SPERM_LIST')
+		SOCIAL = self.GET_DB_RANDOM(table='SOCIAL_LIST')
+		POLITICAL = self.GET_DB_RANDOM(table='POLITICAL_LIST')
+		ECONOMIC = self.GET_DB_RANDOM(table='ECONOMIC_LIST')
+		RELIGION = self.GET_DB_RANDOM(table='RELIGION_LIST')
+		MILITARY = self.GET_DB_RANDOM(table='MILITARY_LIST')
+		RACIAL_FEATURE_LIST = self.BUILD_RANDOM_LIST(table='RACIAL_FEATURE',total=5)
+		PROFICIENCIES_LIST = self.BUILD_RANDOM_LIST(table='PROFICIENCIES',total=5)
+		SUBCLASSES_LIST = self.BUILD_RANDOM_LIST(table='CLASS_LIST',total=2)
 
-	#Main function
-	def main(self):
-		#Get user input and set seed
-		random.seed(self.CITY_NAME)
+		# Now check for anything manually entered, only overwrite what's missing
+		if self.COMMUNITY_SIZE == "": self.COMMUNITY_SIZE = COMMUNITY_SIZE
+		if self.SPERM == "": self.SPERM = SPERM
+		if self.SOCIAL == "": self.SOCIAL = SOCIAL
+		if self.POLITICAL == "": self.POLITICAL = POLITICAL
+		if self.ECONOMIC == "": self.ECONOMIC = ECONOMIC
+		if self.RELIGION == "": self.RELIGION = RELIGION
+		if self.MILITARY == "": self.MILITARY = MILITARY
 
-		#Let's get them deets
-		self.COMMUNITY_SIZE = COMMUNITY_SIZE_LIST[random.randint(0,len(COMMUNITY_SIZE_LIST)-1)]
-		self.SPERM = SPERM_LIST[random.randint(0,len(SPERM_LIST)-1)]
-		self.POLITICAL = POLITICAL_LIST[random.randint(0,len(POLITICAL_LIST)-1)]
-		self.ECONOMIC = ECONOMIC_LIST[random.randint(0,len(ECONOMIC_LIST)-1)]
-		self.MILITARY = MILITARY_LIST[random.randint(0,len(MILITARY_LIST)-1)]
-		self.SOCIAL = SOCIAL_LIST[random.randint(0,len(SOCIAL_LIST)-1)]
-		self.RELIGION = RELIGION_LIST[random.randint(0,len(RELIGION_LIST)-1)]
+		# For the lists, we overwrite in order.
+		# 3 entered items will overwrite the first 3 random entities
+		if self.RACIAL_FEATURE_LIST == []: self.RACIAL_FEATURE_LIST = RACIAL_FEATURE_LIST
+		else:
+			for i in range(len(self.RACIAL_FEATURE_LIST)):
+				RACIAL_FEATURE_LIST[i] = self.RACIAL_FEATURE_LIST[i]
+			self.RACIAL_FEATURE_LIST = RACIAL_FEATURE_LIST
 
-		#More files, more deets
-		#Generational Features
-		for i in range(5):
-			RACIAL_FEATURE = self.GET_EXTERNAL_RANDOM(rsv='RACIAL_FEATURE')
-			while (RACIAL_FEATURE in self.RACIAL_FEATURE_LIST):
-				RACIAL_FEATURE = self.GET_EXTERNAL_RANDOM(rsv='RACIAL_FEATURE')
-			self.RACIAL_FEATURE_LIST.append(RACIAL_FEATURE)
-		self.RACIAL_FEATURE_LIST.sort()
+		if self.PROFICIENCIES_LIST== []: self.PROFICIENCIES_LIST = PROFICIENCIES_LIST
+		else:
+			for i in range(len(self.PROFICIENCIES_LIST)):
+				PROFICIENCIES_LIST[i] = self.PROFICIENCIES_LIST[i]
+			self.PROFICIENCIES_LIST = PROFICIENCIES_LIST
 
-		#Background Proficiencies
-		for i in range(5):
-			PROFICIENCIES = self.GET_EXTERNAL_RANDOM(rsv='PROFICIENCIES')
-			while (PROFICIENCIES in self.PROFICIENCIES_LIST):
-				PROFICIENCIES = self.GET_EXTERNAL_RANDOM(rsv='PROFICIENCIES')
-			self.PROFICIENCIES_LIST.append(PROFICIENCIES)
-		self.PROFICIENCIES_LIST.sort()
+		if self.SUBCLASSES_LIST== []: self.SUBCLASSES_LIST = SUBCLASSES_LIST
+		else:
+			for i in range(len(self.SUBCLASSES_LIST)):
+				SUBCLASSES_LIST[i] = self.SUBCLASSES_LIST[i]
+			self.SUBCLASSES_LIST = SUBCLASSES_LIST
 
-		#Classes
-		CLASS_0 = self.GET_EXTERNAL_RANDOM(rsv='CLASS_LIST')
-		CLASS_1 = self.GET_EXTERNAL_RANDOM(rsv='CLASS_LIST')
-		while (CLASS_1 == CLASS_0):
-			CLASS_1 = self.GET_EXTERNAL_RANDOM(rsv='CLASS_LIST')
-
-
-
-		#Print
-		print(f'{self.CITY_NAME} is a {self.COMMUNITY_SIZE} with a large focus on {self.SPERM}.')
-		print(f'This {self.COMMUNITY_SIZE} is governed by {self.POLITICAL} where it\'s main economic exploit is {self.ECONOMIC}.')
-		print(f'{self.MILITARY} oversees all conflict in {self.CITY_NAME}.')
-		print(f'The locals of {self.CITY_NAME} spend their free time at its {self.SOCIAL}.')
-		print(f'Those who live here often find themselves {self.RELIGION}, but are tolerant of others beliefs.')
-		print('')
-		print('The families that have been here for generations tend to have one or more of the following racial features:')
-		for i in self.RACIAL_FEATURE_LIST:
-			print(f'\t* {i}')
-		print('')
-		print('Anyone who has spent a decent amount of time here, likely has developed one or more of the following Skill Proficiencies:')
-		for i in self.PROFICIENCIES_LIST:
-			print(f'\t* {i}')
-		print('')
-		print(f'Adventurers who have found their start in {self.CITY_NAME} tend to become a {CLASS_0} or a {CLASS_1}')
+		return 0
 
 
 ##Execute
 if __name__=="__main__":
+	# Parse the CLI for manually entered entities
 	parser = argparse.ArgumentParser()#formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-	parser.add_argument('-c', '--city_name', help='Set City Name. *REQUIRED*')
+	parser.add_argument('-c', '--civ_name', help='Set Civilization Name. *REQUIRED*')
 	parser.add_argument('--community_size', help='Set Community Size', default='')
 	parser.add_argument('--sperm', help='Set Focus', default='')
 	parser.add_argument('--social', help='Set Social', default='')
@@ -171,37 +117,88 @@ if __name__=="__main__":
 	parser.add_argument('--economic', help='Set Economy', default='')
 	parser.add_argument('--religion', help='Set Religion', default='')
 	parser.add_argument('--military', help='Set Military', default='')
-	parser.add_argument('--racial_feature_list', action='append', help='Add Racial Feature', default='')
-	parser.add_argument('--proficiencies_list', action='append', help='Add Proficiency', default='')
+	parser.add_argument('--racial_feature_list', action='append', help='Add Racial Feature', default=[])
+	parser.add_argument('--proficiencies_list', action='append', help='Add Proficiency', default=[])
+	parser.add_argument('--subclasses_list', action='append', help='Add SubClass', default=[])
 	args = parser.parse_args()
 
-	print(f'city_name: {args.city_name}')
-	print(f'community_size: {args.community_size}')
-	print(f'focus: {args.sperm}')
-	print(f'social: {args.social}')
-	print(f'political: {args.political}')
-	print(f'economic: {args.economic}')
-	print(f'religion: {args.religion}')
-	print(f'military: {args.military}')
-	print(f'racial_feature_list: {args.racial_feature_list}')
-	print(f'proficiencies_list: {args.proficiencies_list}')
+	# This main funciton will be used to loop generation in the CLI
+	def main():
+		# Grab user name, all other fields will be generated randomly
+		# Parsed Arguments will be ignored
+		print("What is the name of your Civilization?")
+		civ_name = input("> ")
+		civ = Civilization(CIV_NAME=civ_name)
+		civ.BUILD_CIVILIZATION()
+
+		# Print out results
+		print(f"{civ.CIV_NAME} is a {civ.COMMUNITY_SIZE} with a large focus on its {civ.SPERM}.")
+		print(f"This {civ.COMMUNITY_SIZE} is governed by {civ.POLITICAL} where it's main export is {civ.ECONOMIC}.")
+		print(f"{civ.MILITARY} oversees all conflict in {civ.CIV_NAME}.")
+		print(f"The locals of {civ.CIV_NAME} spend their free time at one of its many {civ.SOCIAL}.")
+		print(f"Those who live here often find themselves {civ.RELIGION}, but are tolerant of others beliefs.")
+		print()
+		print(f"The families that have been here for generations tend to have one or more of the following racial features:")
+		for i in range(len(civ.RACIAL_FEATURE_LIST)):
+			print(f"\t*{civ.RACIAL_FEATURE_LIST[i]}")
+		print()
+		print(f"Anyone who has spent a decent amount of time here, likely has developed one or more of the following skills:")
+		for i in range(len(civ.PROFICIENCIES_LIST)):
+			print(f"\t*{civ.PROFICIENCIES_LIST[i]}")
+		print()
+		print(f"Adventurers who have found their start in {civ.CIV_NAME} tend to become {civ.SUBCLASSES_LIST[0][0]} or {str(civ.SUBCLASSES_LIST[1][0])}")
+
+	#If False, generate once with CLI and ArgParser, if True ask name and loop
+	while False: main()
+
+	# Create object with CLI Arguments and Build
+	civ = Civilization(CIV_NAME=args.civ_name, COMMUNITY_SIZE=args.community_size, SPERM=args.sperm, POLITICAL=args.social, ECONOMIC=args.political, MILITARY=args.economic, SOCIAL=args.religion, RELIGION=args.military, RACIAL_FEATURE_LIST=args.racial_feature_list, PROFICIENCIES_LIST=args.proficiencies_list, SUBCLASSES_LIST=args.subclasses_list)
+	civ.BUILD_CIVILIZATION()
+
+	# Print out results.
+	print(f"{civ.CIV_NAME} is a {civ.COMMUNITY_SIZE} with a large focus on its {civ.SPERM}.")
+	print(f"This {civ.COMMUNITY_SIZE} is governed by {civ.POLITICAL} where it's main export is {civ.ECONOMIC}.")
+	print(f"{civ.MILITARY} oversees all conflict in {civ.CIV_NAME}.")
+	print(f"The locals of {civ.CIV_NAME} spend their free time at one of its many {civ.SOCIAL}.")
+	print(f"Those who live here often find themselves {civ.RELIGION}, but are tolerant of others beliefs.")
 	print()
-
-	civ = Civilization(CITY_NAME=args.city_name, COMMUNITY_SIZE=args.community_size, SPERM=args.sperm, POLITICAL=args.social, ECONOMIC=args.political, MILITARY=args.economic, SOCIAL=args.religion, RELIGION=args.military, RACIAL_FEATURE_LIST=args.racial_feature_list, PROFICIENCIES_LIST=args.proficiencies_list)
-	print(f'city_name: {civ.CITY_NAME}')
-	print(f'community_size: {civ.COMMUNITY_SIZE}')
-	print(f'focus: {civ.SPERM}')
-	print(f'social: {civ.POLITICAL}')
-	print(f'political: {civ.ECONOMIC}')
-	print(f'economic: {civ.MILITARY}')
-	print(f'religion: {civ.SOCIAL}')
-	print(f'military: {civ.RELIGION}')
-	print(f'racial_feature_list: {civ.RACIAL_FEATURE_LIST}')
-	print(f'proficiencies_list: {civ.PROFICIENCIES_LIST}')
+	print(f"The families that have been here for generations tend to have one or more of the following racial features:")
+	for i in range(len(civ.RACIAL_FEATURE_LIST)):
+		print(f"\t*{civ.RACIAL_FEATURE_LIST[i]}")
 	print()
+	print(f"Anyone who has spent a decent amount of time here, likely has developed one or more of the following skills:")
+	for i in range(len(civ.PROFICIENCIES_LIST)):
+		print(f"\t*{civ.PROFICIENCIES_LIST[i]}")
+	print()
+	print(f"Adventurers who have found their start in {civ.CIV_NAME} tend to become {civ.SUBCLASSES_LIST[0][0]} or {str(civ.SUBCLASSES_LIST[1][0])}")
 
-	for i in civ:
-		print(i)
 
 
-#	civ.main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Listen I just like to have some extra space at the end and ATOM is being a real cheese about it
