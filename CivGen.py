@@ -1,5 +1,6 @@
 """
-CivGen V3 by Alec Davidson
+CivGen V3.1 by Alec Davidson
+Fixed Typos
 """
 ## Import Modules
 import argparse, random, sqlite3 as sl, sys
@@ -9,7 +10,7 @@ import argparse, random, sqlite3 as sl, sys
 resources = sl.connect('resources.db') # Static DB
 civdb = sl.connect('civilizations.db') # Dynamic DB
 
-# Define Classes
+# Define Class
 class Civilization():
 	# Initialize the class with variables matching the table headers from the DB
 	def __init__(self, id=-1, CIV_NAME="", COMMUNITY_SIZE="", SPERM="", POLITICAL="", ECONOMIC="", MILITARY="", SOCIAL="", RELIGION="", RACIAL_FEATURE_LIST = [], PROFICIENCIES_LIST = [], SUBCLASSES_LIST = []):
@@ -106,7 +107,7 @@ class Civilization():
 			racial_feature = civdb.execute("select seq from sqlite_sequence where name = 'racial_feature'")
 			racial_feature = [i[0] for i in racial_feature][0]
 
-		# RInse and Repete with Proficiencies
+		# Rinse and Repete with Proficiencies
 		sql_proficiencies = 'INSERT INTO proficiencies (proficiency1,proficiency2,proficiency3,proficiency4,proficiency5) values(?,?,?,?,?)'
 		data_proficiencies = [
 			(self.PROFICIENCIES_LIST[0],self.PROFICIENCIES_LIST[1],self.PROFICIENCIES_LIST[2],self.PROFICIENCIES_LIST[3],self.PROFICIENCIES_LIST[4])
@@ -126,7 +127,7 @@ class Civilization():
 			subclasses = civdb.execute("select seq from sqlite_sequence where name = 'subclasses'")
 			subclasses = [i[0] for i in subclasses][0]
 
-		# Finally, for Civilization we do the same as above, but with the ID references are stored instead of the actual data for the lists
+		# Finally, for Civilization we do the same as above, but with the ID references stored instead of the actual data for the lists
 		sql = f'INSERT INTO civilizations (civ_name,community_size,sperm,social,political,economic,religion,military,racial_feature,proficiencies,subclasses) values(?,?,?,?,?,?,?,?,?,?,?)'
 		data = [
 			(str(self.CIV_NAME),str(self.COMMUNITY_SIZE),str(self.SPERM),str(self.SOCIAL),str(self.POLITICAL),str(self.ECONOMIC),str(self.RELIGION),str(self.MILITARY),str(racial_feature),str(proficiencies),str(subclasses))
@@ -218,18 +219,18 @@ class Civilization():
 			id = random.randint(1,limit)
 			# Grab entry
 			try:
-				#Most of these lists use name as their key
+				# Most of these lists use name as their key
 				entry = resources.execute(f'select name from {table} where id = {id};')
 				entry = [i[0] for i in entry][0]
 			except:
-				#I decided it was a good idea to do Class/Subclass differently
+				# I decided it was a good idea to do Class/Subclass differently
 				entry = resources.execute(f'select class,subclass from {table} where id = {id};')
 				temp = []
 				for i in entry:
 					temp.append(i[0])
 					temp.append(i[1])
 				entry = temp
-				#self.SUBCLASSES_LIST.replace('[','').replace(']','')
+
 			# Final Result is returned
 			return entry
 
@@ -243,11 +244,11 @@ class Civilization():
 			list.append(temp)
 		return list
 
-	# Generate a Civilization using the previous 2 functions
+	# Generate a Civilization using GET_DB_RANDOM and BUILD_RANDOM_LIST functions
 	def GEN_CIV(self):
 		# Use the name of the Civilization as a seed for random
 		random.seed(self.CIV_NAME)
-		# Set each field using GET_DB_RANDOM and BUILD_RANDOM_LIST
+		# Set each single field using GET_DB_RANDOM
 		self.COMMUNITY_SIZE = self.GET_DB_RANDOM(table='COMMUNITY_SIZE_LIST')
 		self.SPERM = self.GET_DB_RANDOM(table='SPERM_LIST')
 		self.SOCIAL = self.GET_DB_RANDOM(table='SOCIAL_LIST')
@@ -255,6 +256,7 @@ class Civilization():
 		self.ECONOMIC = self.GET_DB_RANDOM(table='ECONOMIC_LIST')
 		self.RELIGION = self.GET_DB_RANDOM(table='RELIGION_LIST')
 		self.MILITARY = self.GET_DB_RANDOM(table='MILITARY_LIST')
+		# Set lists using BUILD_RANDOM_LIST
 		self.RACIAL_FEATURE_LIST = self.BUILD_RANDOM_LIST(table='RACIAL_FEATURE',total=5)
 		self.PROFICIENCIES_LIST = self.BUILD_RANDOM_LIST(table='PROFICIENCIES',total=5)
 		temp_SUBCLASSES_LIST = self.BUILD_RANDOM_LIST(table='CLASS_LIST',total=2)
@@ -282,11 +284,11 @@ class Civilization():
 		PROFICIENCIES_LIST = self.PROFICIENCIES_LIST
 		SUBCLASSES_LIST = self.SUBCLASSES_LIST
 
-		# Create a second Civ object with the same civ_name and generate details
+		# Create a second Civ object with the same civ_name and execute GEN_CIV()
 		base = Civilization(CIV_NAME=self.CIV_NAME)
 		base = base.GEN_CIV()
 
-		# READ_DB overwrites the values in self with anything stored in the DB
+		# READ_DB() overwrites the values in self with anything stored in the DB
 		self.READ_DB()
 
 		# If this is a new generation (id==-1) or user requests a RESET, overwrite self with base
@@ -336,7 +338,7 @@ class Civilization():
 ## Global Functions
 # Get a list of all saved Civilizations
 def READ_LIST():
-	# COnnect to Civilizations DB and grab all civ_names
+	# Connect to Civilizations DB and grab all civ_names
 	sql = "select civ_name from civilizations;"
 	with civdb:
 		civ_list = civdb.execute(sql)
@@ -348,7 +350,7 @@ def READ_LIST():
 
 	return civ_name_list
 
-##Execute
+## Execute
 if __name__=="__main__":
 	# Parse the CLI for manually entered entities
 	parser = argparse.ArgumentParser()#formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -371,12 +373,12 @@ if __name__=="__main__":
 	while len(args.proficiencies_list) < 5: args.proficiencies_list.append("")
 	while len(args.subclasses_list) < 4: args.subclasses_list.append("")
 
-	# This main funciton will be used to loop generation in the CLI
-	def main():
-		# Give a list of all saved Civs
+	# This loop funciton will be used to loop generation in the CLI
+	def loop():
+		# Display a list of all saved Civs
 		READ_LIST()
 
-		# Grab user name, all other fields will be generated randomly
+		# Grab Civ Name, all other fields will be generated randomly
 		print("What is the name of your Civilization?")
 		civ_name = input("> ")
 
@@ -391,8 +393,8 @@ if __name__=="__main__":
 		args.read = True
 		return 1
 
-	# If True run main(), if False generate one Civ using any/all manually entered values
-	while False: main()
+	# If True run loop(), if False generate one Civ using any/all manually entered values
+	while False: loop()
 
 	# If args.read==True, display saved Civs and do nothing, else generate
 	if args.read: print(READ_LIST())
