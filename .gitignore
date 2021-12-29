@@ -16,6 +16,7 @@ update_db.py
 *.exe
 *.o
 *.so
+*.pyc
 *.bak
 
 # Packages #
