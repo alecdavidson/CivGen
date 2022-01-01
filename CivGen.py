@@ -1,5 +1,5 @@
 """
-CivGen V3.1 by Alec Davidson
+CivGen V3.2 by Alec Davidson
 Fixed Typos
 """
 ## Import Modules
@@ -94,7 +94,7 @@ class Civilization():
 
 	# Save Generated town to the DB for future References
 	def SAVE_DB(self):
-		# Save Racial Features to a seperate table on the DB
+		# Save Racial Features to a separate table on the DB
 		# Format query and data
 		sql_feature = 'INSERT INTO racial_feature (feature1,feature2,feature3,feature4,feature5) values(?,?,?,?,?)'
 		data_feature = [
@@ -107,7 +107,7 @@ class Civilization():
 			racial_feature = civdb.execute("select seq from sqlite_sequence where name = 'racial_feature'")
 			racial_feature = [i[0] for i in racial_feature][0]
 
-		# Rinse and Repete with Proficiencies
+		# Rinse and Repeat with Proficiencies
 		sql_proficiencies = 'INSERT INTO proficiencies (proficiency1,proficiency2,proficiency3,proficiency4,proficiency5) values(?,?,?,?,?)'
 		data_proficiencies = [
 			(self.PROFICIENCIES_LIST[0],self.PROFICIENCIES_LIST[1],self.PROFICIENCIES_LIST[2],self.PROFICIENCIES_LIST[3],self.PROFICIENCIES_LIST[4])
@@ -213,7 +213,7 @@ class Civilization():
 		with resources:
 			# Get the total size of the table
 			limit = resources.execute(f'select count() from {table};')
-			# Format for funcitonality
+			# Format for functionality
 			limit = [i[0] for i in limit][0]
 			# Random entry
 			id = random.randint(1,limit)
@@ -373,7 +373,7 @@ if __name__=="__main__":
 	while len(args.proficiencies_list) < 5: args.proficiencies_list.append("")
 	while len(args.subclasses_list) < 4: args.subclasses_list.append("")
 
-	# This loop funciton will be used to loop generation in the CLI
+	# This loop function will be used to loop generation in the CLI
 	def loop():
 		# Display a list of all saved Civs
 		READ_LIST()

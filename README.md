@@ -1,7 +1,7 @@
 Randomly Generate details for a fictional civilizations using the civilizations name as a seed.
 Currently only runs in CLI
 
-To Do: 
+To Do:
 * Figure out how existing Civs affect randomizer
 * Create Application with TKinter
 
@@ -26,9 +26,9 @@ Make a new connection and query the additional tables
 
 SAVE_DB(self)
 Save Generated town to the DB for future References
-Save Racial Features to a seperate table on the DB
+Save Racial Features to a separate table on the DB
 Get the ID of the entry we just created by making a query to sqlite_sequence table
-Rinse and Repete with Proficiencies
+Rinse and Repeat with Proficiencies
 And Again with Subclasses
 Finally, for Civilization we do the same as above, but with the ID references stored instead of the actual data for the lists
 
@@ -49,7 +49,7 @@ GET_DB_RANDOM(self, table)
 Get a single random entry from DB
 Just need to know what table to use for the lookup
 Get the total size of the table
-Format for funcitonality
+Format for functionality
 Grab Random entry
 Most of these lists use name as their key
 I decided it was a good idea to do Class/Subclass differently
@@ -88,7 +88,7 @@ Parse the CLI for manually entered entities
 Append nothing to the lists in order to match desired length
 
 loop()
-This loop funciton will be used to loop generation in the CLI
+This loop function will be used to loop generation in the CLI
 Display a list of all saved Civs
 Grab Civ Name, all other fields will be generated randomly
 Initialize object and build
