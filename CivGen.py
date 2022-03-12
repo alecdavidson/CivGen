@@ -13,9 +13,10 @@ civdb = sl.connect('civilizations.db') # Dynamic DB
 # Define Class
 class Civilization():
 	# Initialize the class with variables matching the table headers from the DB
-	def __init__(self, id=-1, CIV_NAME="", COMMUNITY_SIZE="", SPERM="", POLITICAL="", ECONOMIC="", MILITARY="", SOCIAL="", RELIGION="", RACIAL_FEATURE_LIST = [], PROFICIENCIES_LIST = [], SUBCLASSES_LIST = []):
+	def __init__(self, id=-1, CIV_NAME="", KINGDOM="", COMMUNITY_SIZE="", SPERM="", POLITICAL="", ECONOMIC="", MILITARY="", SOCIAL="", RELIGION="", RACIAL_FEATURE_LIST = [], PROFICIENCIES_LIST = [], SUBCLASSES_LIST = []):
 		self.id=id
 		self.CIV_NAME = CIV_NAME
+		self.KINGDOM = KINGDOM
 		self.COMMUNITY_SIZE = COMMUNITY_SIZE
 		self.SPERM = SPERM
 		self.POLITICAL = POLITICAL
@@ -31,7 +32,7 @@ class Civilization():
 	# Read the DB for existing Civilization
 	def READ_DB(self):
 		# Format and execute SQL command to Civilization DB
-		sql = f"select * from civilizations where civ_name='{str(self.CIV_NAME)}';"
+		sql = f"select * from civilizations where civ_name='{str(self.CIV_NAME)}' and kingdom='{str(self.KINGDOM)}';"
 		with civdb:
 			civ = civdb.execute(sql)
 
@@ -39,18 +40,19 @@ class Civilization():
 		for i in civ:
 			self.id = i[0]
 			self.CIV_NAME = i[1]
-			self.COMMUNITY_SIZE = i[2]
-			self.SPERM = i[3]
-			self.SOCIAL = i[4]
-			self.POLITICAL = i[5]
-			self.ECONOMIC = i[6]
-			self.RELIGION = i[7]
-			self.MILITARY = i[8]
+			self.KINGDOM = i[2]
+			self.COMMUNITY_SIZE = i[3]
+			self.SPERM = i[4]
+			self.SOCIAL = i[5]
+			self.POLITICAL = i[6]
+			self.ECONOMIC = i[7]
+			self.RELIGION = i[8]
+			self.MILITARY = i[9]
 
 			# Lists are more complex, store to temp variable
-			temp_RACIAL_FEATURE = i[9]
-			temp_PROFICIENCIES = i[10]
-			temp_SUBCLASSES = i[11]
+			temp_RACIAL_FEATURE = i[10]
+			temp_PROFICIENCIES = i[11]
+			temp_SUBCLASSES = i[12]
 
 			# Create temp lists
 			temp_RACIAL_FEATURE_LIST = []
@@ -96,9 +98,9 @@ class Civilization():
 	def SAVE_DB(self):
 		# Save Racial Features to a separate table on the DB
 		# Format query and data
-		sql_feature = 'INSERT INTO racial_feature (feature1,feature2,feature3,feature4,feature5) values(?,?,?,?,?)'
+		sql_feature = 'INSERT INTO racial_feature (feature1,feature2,feature3,feature4) values(?,?,?,?)'
 		data_feature = [
-			(self.RACIAL_FEATURE_LIST[0],self.RACIAL_FEATURE_LIST[1],self.RACIAL_FEATURE_LIST[2],self.RACIAL_FEATURE_LIST[3],self.RACIAL_FEATURE_LIST[4])
+			(self.RACIAL_FEATURE_LIST[0],self.RACIAL_FEATURE_LIST[1],self.RACIAL_FEATURE_LIST[2],self.RACIAL_FEATURE_LIST[3])
 		]
 		# Connect to Civ DB and execute command
 		with civdb:
@@ -108,9 +110,9 @@ class Civilization():
 			racial_feature = [i[0] for i in racial_feature][0]
 
 		# Rinse and Repeat with Proficiencies
-		sql_proficiencies = 'INSERT INTO proficiencies (proficiency1,proficiency2,proficiency3,proficiency4,proficiency5) values(?,?,?,?,?)'
+		sql_proficiencies = 'INSERT INTO proficiencies (proficiency1,proficiency2,proficiency3,proficiency4) values(?,?,?,?)'
 		data_proficiencies = [
-			(self.PROFICIENCIES_LIST[0],self.PROFICIENCIES_LIST[1],self.PROFICIENCIES_LIST[2],self.PROFICIENCIES_LIST[3],self.PROFICIENCIES_LIST[4])
+			(self.PROFICIENCIES_LIST[0],self.PROFICIENCIES_LIST[1],self.PROFICIENCIES_LIST[2],self.PROFICIENCIES_LIST[3])
 		]
 		with civdb:
 			civdb.executemany(sql_proficiencies, data_proficiencies)
@@ -128,9 +130,9 @@ class Civilization():
 			subclasses = [i[0] for i in subclasses][0]
 
 		# Finally, for Civilization we do the same as above, but with the ID references stored instead of the actual data for the lists
-		sql = f'INSERT INTO civilizations (civ_name,community_size,sperm,social,political,economic,religion,military,racial_feature,proficiencies,subclasses) values(?,?,?,?,?,?,?,?,?,?,?)'
+		sql = f'INSERT INTO civilizations (civ_name,kingdom,community_size,sperm,social,political,economic,religion,military,racial_feature,proficiencies,subclasses) values(?,?,?,?,?,?,?,?,?,?,?,?)'
 		data = [
-			(str(self.CIV_NAME),str(self.COMMUNITY_SIZE),str(self.SPERM),str(self.SOCIAL),str(self.POLITICAL),str(self.ECONOMIC),str(self.RELIGION),str(self.MILITARY),str(racial_feature),str(proficiencies),str(subclasses))
+			(str(self.CIV_NAME),str(self.KINGDOM),str(self.COMMUNITY_SIZE),str(self.SPERM),str(self.SOCIAL),str(self.POLITICAL),str(self.ECONOMIC),str(self.RELIGION),str(self.MILITARY),str(racial_feature),str(proficiencies),str(subclasses))
 		]
 		with civdb:
 			civdb.executemany(sql, data)
@@ -151,17 +153,17 @@ class Civilization():
 		idlist = idlist[0]
 
 		# Starting with Racial Features, Update the table
-		sql_feature = 'UPDATE racial_feature SET feature1 = ? , feature2 = ? , feature3 = ? , feature4 = ? , feature5 = ? WHERE id = ?'
+		sql_feature = 'UPDATE racial_feature SET feature1 = ? , feature2 = ? , feature3 = ? , feature4 = ? WHERE id = ?'
 		data_feature = [
-			(self.RACIAL_FEATURE_LIST[0],self.RACIAL_FEATURE_LIST[1],self.RACIAL_FEATURE_LIST[2],self.RACIAL_FEATURE_LIST[3],self.RACIAL_FEATURE_LIST[4],idlist[0])
+			(self.RACIAL_FEATURE_LIST[0],self.RACIAL_FEATURE_LIST[1],self.RACIAL_FEATURE_LIST[2],self.RACIAL_FEATURE_LIST[3],idlist[0])
 		]
 		with civdb:
 			civdb.executemany(sql_feature, data_feature)
 
 		# You know the drill... Proficiencies
-		sql_proficiencies = 'UPDATE proficiencies SET proficiency1 = ? , proficiency2 = ? , proficiency3 = ? , proficiency4 = ? , proficiency5 = ? WHERE id = ?'
+		sql_proficiencies = 'UPDATE proficiencies SET proficiency1 = ? , proficiency2 = ? , proficiency3 = ? , proficiency4 = ? WHERE id = ?'
 		data_proficiencies = [
-			(self.PROFICIENCIES_LIST[0],self.PROFICIENCIES_LIST[1],self.PROFICIENCIES_LIST[2],self.PROFICIENCIES_LIST[3],self.PROFICIENCIES_LIST[4],idlist[1])
+			(self.PROFICIENCIES_LIST[0],self.PROFICIENCIES_LIST[1],self.PROFICIENCIES_LIST[2],self.PROFICIENCIES_LIST[3],idlist[1])
 		]
 		with civdb:
 			civdb.executemany(sql_proficiencies, data_proficiencies)
@@ -176,9 +178,9 @@ class Civilization():
 
 		# Finally... Civilization
 		# Note, we store the IDs of the other tables instead of the full lists.
-		sql = f'UPDATE civilizations SET civ_name = ? , community_size = ? , sperm = ? , social = ? , political = ? , economic = ? , religion = ? , military = ? , racial_feature = ? , proficiencies  = ? , subclasses = ? WHERE id = ?'
+		sql = f'UPDATE civilizations SET civ_name = ? , kingdom = ? , community_size = ? , sperm = ? , social = ? , political = ? , economic = ? , religion = ? , military = ? , racial_feature = ? , proficiencies  = ? , subclasses = ? WHERE id = ?'
 		data = [
-			(str(self.CIV_NAME),str(self.COMMUNITY_SIZE),str(self.SPERM),str(self.SOCIAL),str(self.POLITICAL),str(self.ECONOMIC),str(self.RELIGION),str(self.MILITARY),idlist[0],idlist[1],idlist[2],self.id)
+			(str(self.CIV_NAME),str(self.KINGDOM),str(self.COMMUNITY_SIZE),str(self.SPERM),str(self.SOCIAL),str(self.POLITICAL),str(self.ECONOMIC),str(self.RELIGION),str(self.MILITARY),idlist[0],idlist[1],idlist[2],self.id)
 		]
 		with civdb:
 			civdb.executemany(sql, data)
@@ -189,17 +191,17 @@ class Civilization():
 	def PRINT_CIV(self):
 		# It prints
 		print("")
-		print(f"{self.CIV_NAME} is a {self.COMMUNITY_SIZE} with a large focus on its {self.SPERM}.")
+		print(f"{self.CIV_NAME} is a {self.COMMUNITY_SIZE} in {self.KINGDOM} with a large focus on its {self.SPERM}.")
 		print(f"This {self.COMMUNITY_SIZE} is governed by {self.POLITICAL} where it's main export is {self.ECONOMIC}.")
 		print(f"{self.MILITARY} oversees all conflict in {self.CIV_NAME}.")
 		print(f"The locals of {self.CIV_NAME} spend their free time at one of its many {self.SOCIAL}.")
 		print(f"Those who live here often find themselves {self.RELIGION}, but are tolerant of others beliefs.")
 		print()
-		print(f"The families that have been here for generations tend to have one or more of the following racial features:")
+		print(f"Families that have lived here for generations tend to have one or more of the following features:")
 		for i in range(len(self.RACIAL_FEATURE_LIST)):
 			print(f"\t*{self.RACIAL_FEATURE_LIST[i]}")
 		print()
-		print(f"Anyone who has spent a decent amount of time here, likely has developed one or more of the following skills:")
+		print(f"Anyone who has spent a decent amount of time here, likely has honed one or more of the following skills:")
 		for i in range(len(self.PROFICIENCIES_LIST)):
 			print(f"\t*{self.PROFICIENCIES_LIST[i]}")
 		print()
@@ -220,8 +222,17 @@ class Civilization():
 			# Grab entry
 			try:
 				# Most of these lists use name as their key
-				entry = resources.execute(f'select name from {table} where id = {id};')
-				entry = [i[0] for i in entry][0]
+				try:
+					entry = resources.execute(f'select name,type,description from {table} where id = {id};')
+					temp = []
+					for i in entry:
+						temp.append(i[0])
+						temp.append(i[1])
+						temp.append(i[2])
+					entry = temp
+				except:
+					entry = resources.execute(f'select name from {table} where id = {id};')
+					entry = [i[0] for i in entry][0]
 			except:
 				# I decided it was a good idea to do Class/Subclass differently
 				entry = resources.execute(f'select class,subclass from {table} where id = {id};')
@@ -237,17 +248,30 @@ class Civilization():
 	# Sometimes we need more than one entry for a field
 	def BUILD_RANDOM_LIST(self, table, total):
 		list = []
+		list2 = []
 		# Use for/while loops to check for duplicates
-		for i in range(total):
-			temp = self.GET_DB_RANDOM(table)
-			while temp in list: temp = self.GET_DB_RANDOM(table)
-			list.append(temp)
+		if table=="CLASS_LIST":
+			for i in range(total):
+				temp = self.GET_DB_RANDOM(table)
+				while temp in list: temp = self.GET_DB_RANDOM(table)
+				list.append(temp)
+		else:
+			for i in range(total):
+				temp = self.GET_DB_RANDOM(table)
+				for i in range(len(list)):
+					if temp[1]==list2[i]:
+						while temp[1] in list2:
+							temp = self.GET_DB_RANDOM(table)
+
+				list.append(f'{temp[0]} [{temp[2]}]')
+				list2.append(temp[1])
+
 		return list
 
 	# Generate a Civilization using GET_DB_RANDOM and BUILD_RANDOM_LIST functions
 	def GEN_CIV(self):
 		# Use the name of the Civilization as a seed for random
-		random.seed(self.CIV_NAME)
+		random.seed(str(self.CIV_NAME)+str(self.KINGDOM))
 		# Set each single field using GET_DB_RANDOM
 		self.COMMUNITY_SIZE = self.GET_DB_RANDOM(table='COMMUNITY_SIZE_LIST')
 		self.SPERM = self.GET_DB_RANDOM(table='SPERM_LIST')
@@ -257,8 +281,8 @@ class Civilization():
 		self.RELIGION = self.GET_DB_RANDOM(table='RELIGION_LIST')
 		self.MILITARY = self.GET_DB_RANDOM(table='MILITARY_LIST')
 		# Set lists using BUILD_RANDOM_LIST
-		self.RACIAL_FEATURE_LIST = self.BUILD_RANDOM_LIST(table='RACIAL_FEATURE',total=5)
-		self.PROFICIENCIES_LIST = self.BUILD_RANDOM_LIST(table='PROFICIENCIES',total=5)
+		self.RACIAL_FEATURE_LIST = self.BUILD_RANDOM_LIST(table='RACIAL_FEATURE',total=4)
+		self.PROFICIENCIES_LIST = self.BUILD_RANDOM_LIST(table='PROFICIENCIES',total=4)
 		temp_SUBCLASSES_LIST = self.BUILD_RANDOM_LIST(table='CLASS_LIST',total=2)
 		# For better formatting, break up the returned Class/Subclass's
 		SUBCLASSES_LIST = []
@@ -285,7 +309,7 @@ class Civilization():
 		SUBCLASSES_LIST = self.SUBCLASSES_LIST
 
 		# Create a second Civ object with the same civ_name and execute GEN_CIV()
-		base = Civilization(CIV_NAME=self.CIV_NAME)
+		base = Civilization(CIV_NAME=self.CIV_NAME,KINGDOM=self.KINGDOM)
 		base = base.GEN_CIV()
 
 		# READ_DB() overwrites the values in self with anything stored in the DB
@@ -337,16 +361,18 @@ class Civilization():
 
 ## Global Functions
 # Get a list of all saved Civilizations
-def READ_LIST():
+def READ_LIST(kingdom):
 	# Connect to Civilizations DB and grab all civ_names
-	sql = "select civ_name from civilizations;"
+	# If a Kingdom has been provided, only search for civilizations under that Kingdom
+	if kingdom=='':sql = "select civ_name,kingdom from civilizations;"
+	else: sql = f"select civ_name,kingdom from civilizations where kingdom like '{kingdom}';"
 	with civdb:
 		civ_list = civdb.execute(sql)
 
 	# Parse through the returned data and restore for easier use
 	civ_name_list = []
 	for i in civ_list:
-		civ_name_list.append(i[0])
+		civ_name_list.append(f'{i[0]} in {i[1]}')
 
 	return civ_name_list
 
@@ -356,6 +382,7 @@ if __name__=="__main__":
 	parser = argparse.ArgumentParser()#formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 	parser.add_argument('-r', '--read', action='store_true', help='If set, prints out existing Civs and enables Generation Looping', default=False)
 	parser.add_argument('-c', '--civ_name', help='Set Civilization Name. *REQUIRED*', default='NULL')
+	parser.add_argument('-k', '--kingdom', help='Set Kingdom Name. *REQUIRED*', default='NULL')
 	parser.add_argument('--community_size', help='Set Community Size', default='')
 	parser.add_argument('--sperm', help='Set Focus', default='')
 	parser.add_argument('--social', help='Set Social', default='')
@@ -369,38 +396,40 @@ if __name__=="__main__":
 	args = parser.parse_args()
 
 	# Append nothing to the lists in order to match desired length
-	while len(args.racial_feature_list) < 5: args.racial_feature_list.append("")
-	while len(args.proficiencies_list) < 5: args.proficiencies_list.append("")
+	while len(args.racial_feature_list) < 4: args.racial_feature_list.append("")
+	while len(args.proficiencies_list) < 4: args.proficiencies_list.append("")
 	while len(args.subclasses_list) < 4: args.subclasses_list.append("")
 
-	# This loop function will be used to loop generation in the CLI
-	def loop():
-		# Display a list of all saved Civs
-		READ_LIST()
-
-		# Grab Civ Name, all other fields will be generated randomly
-		print("What is the name of your Civilization?")
-		civ_name = input("> ")
-
-		# Initialize object and build
-		civ = Civilization(CIV_NAME=civ_name)
-		civ.BUILD_CIVILIZATION()
-
-		# Print out results
-		civ.PRINT_CIV()
-
-		# Set args.read to true to prevent additional generation
-		args.read = True
-		return 1
-
-	# If True run loop(), if False generate one Civ using any/all manually entered values
-	while False: loop()
+#	# This loop function will be used to loop generation in the CLI
+#	def loop():
+#		# Display a list of all saved Civs
+#		READ_LIST()
+#
+#		# Grab Civ Name, all other fields will be generated randomly
+#		print("What is the name of your Kingdom?")
+#		kingdom = input("> ")
+#		print("What is the name of your Civilization?")
+#		civ_name = input("> ")
+#
+#		# Initialize object and build
+#		civ = Civilization(CIV_NAME=civ_name,KINGDOM=kingdom)
+#		civ.BUILD_CIVILIZATION()
+#
+#		# Print out results
+#		civ.PRINT_CIV()
+#
+#		# Set args.read to true to prevent additional generation
+#		args.read = True
+#		return 1
+#
+#	# If True run loop(), if False generate one Civ using any/all manually entered values
+#	while False: loop()
 
 	# If args.read==True, display saved Civs and do nothing, else generate
-	if args.read: print(READ_LIST())
+	if args.read: print(READ_LIST(args.kingdom))
 	else:
 		# Create object with CLI Arguments and Build
-		civ = Civilization(CIV_NAME=args.civ_name, COMMUNITY_SIZE=args.community_size, SPERM=args.sperm, POLITICAL=args.social, ECONOMIC=args.political, MILITARY=args.economic, SOCIAL=args.religion, RELIGION=args.military, RACIAL_FEATURE_LIST=args.racial_feature_list, PROFICIENCIES_LIST=args.proficiencies_list, SUBCLASSES_LIST=args.subclasses_list)
+		civ = Civilization(CIV_NAME=args.civ_name, KINGDOM=args.kingdom, COMMUNITY_SIZE=args.community_size, SPERM=args.sperm, POLITICAL=args.social, ECONOMIC=args.political, MILITARY=args.economic, SOCIAL=args.religion, RELIGION=args.military, RACIAL_FEATURE_LIST=args.racial_feature_list, PROFICIENCIES_LIST=args.proficiencies_list, SUBCLASSES_LIST=args.subclasses_list)
 		id = civ.BUILD_CIVILIZATION()
 
 		# Print out results and ask to save/update
