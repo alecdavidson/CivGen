@@ -9,7 +9,7 @@ Generate details for a fictional civilizations using the Kingdom and Civilizatio
 Source: With Python3.7 installed, open CMD and run `python gui.py`
 Executable: Unzip `CivGen.zip` and run `CivGen.exe`
 
-####To Compile Executable:
+#### To Compile Executable:
  With Python3.7 installed, install `pyinstaller` and run `pyinstaller --onefile -w gui.py`
  Run `gui.py`
 
