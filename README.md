@@ -4,7 +4,8 @@ Generate details for a fictional civilizations using the Kingdom and Civilizatio
 ## To Do:
 * Update GUI to allow all CLI inputs
 * Package into standalone executable
-* Add ability to update or import/export databases
+* Add ability to save generated Civilizations in the GUI
+* Add ability to update or import/export databases from the GUI
 
 ### To Run:
 With Python3.7 installed, open CMD and run `python gui.py`
@@ -111,12 +112,12 @@ Print out results and ask to save/update~~
 ### read():
 Read entries from civilizations.db
 Grab global variables
-Print to CLI and output
 Execute READ_LIST()
+Print to CLI and output
 
 ### generate():
 Create Civilization object and execute BUILD_CIVILIZATION()
-Grab global variables
+Fromat List Inputs
 Create Civilization Object
 Print in CMD with PRINT_CIV()
 Format Output
@@ -129,3 +130,8 @@ Create User Input Fields and Global Variables
 Create Buttons
 Pack Fields
 Open gui
+
+###### Additional Notes
+> Main.py is essential version 1 of this before I made several improvements
+
+> A large part of this is inspired by Dael Kingsmill's video on Creating Towns and NPCs: https://youtu.be/sJd6g--Ok_A

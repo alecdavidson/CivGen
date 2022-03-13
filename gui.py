@@ -16,15 +16,18 @@ def read():
 	print(civ_list)
 	output.insert(END,"City in Kingdom\n_______________\n")
 	for i in civ_list:
-		output.insert(END,f"{i}\n")
+		output.insert(END,u'\u25C6','List')
+		output.insert(END,f" {i}\n",'List')
 	output.insert(END,"\n")
 
 # Create Civilization object and execute BUILD_CIVILIZATION()
 def generate():
-	# Grab global variables
-	global kingdom,civ_name
+	# Fromat List Inputs
+	racial_feature_list_formated = [racial_feature_list.get("1.0", "1.0 lineend"),racial_feature_list.get("2.0", "2.0 lineend"),racial_feature_list.get("3.0", "3.0 lineend"),racial_feature_list.get("4.0", "4.0 lineend")]
+	proficiencies_list_formated = [proficiencies_list.get("1.0", "1.0 lineend"),proficiencies_list.get("2.0", "2.0 lineend"),proficiencies_list.get("3.0", "3.0 lineend"),proficiencies_list.get("4.0", "4.0 lineend")]
+	subclass_list_formated = [subclasses_list.get("1.0", "1.0 lineend"),subclasses_list.get("2.0", "2.0 lineend"),subclasses_list.get("3.0", "3.0 lineend"),subclasses_list.get("4.0", "4.0 lineend")]
 	# Create Civilization Object
-	civ = Civilization(CIV_NAME=civ_name.get(), KINGDOM=kingdom.get(), COMMUNITY_SIZE='', SPERM='', POLITICAL='', ECONOMIC='', MILITARY='', SOCIAL='', RELIGION='', RACIAL_FEATURE_LIST=['','','',''], PROFICIENCIES_LIST=['','','',''], SUBCLASSES_LIST=['','','',''])
+	civ = Civilization(CIV_NAME=civ_name.get(), KINGDOM=kingdom.get(), COMMUNITY_SIZE=community_size.get(), SPERM=sperm.get(), SOCIAL=social.get(), POLITICAL=political.get(), ECONOMIC=economic.get(), RELIGION=religion.get(), MILITARY=military.get(), RACIAL_FEATURE_LIST=racial_feature_list_formated, PROFICIENCIES_LIST=proficiencies_list_formated, SUBCLASSES_LIST=subclass_list_formated)
 	id = civ.BUILD_CIVILIZATION()
 	# Print in CMD with PRINT_CIV()
 	civ.PRINT_CIV()
@@ -66,8 +69,8 @@ def generate():
 	output.insert(END,"Families that have lived here for generations tend to have one or more of the following features:\n")
 
 	for i in range(len(civ.RACIAL_FEATURE_LIST)):
-		output.insert(END,"\t*")
-		output.insert(END,civ.RACIAL_FEATURE_LIST[i],'Entry')
+		output.insert(END,u'\u25C6','List')
+		output.insert(END,f" {civ.RACIAL_FEATURE_LIST[i]}",'List')
 		output.insert(END,"\n")
 
 	output.insert(END,"\n")
@@ -75,8 +78,8 @@ def generate():
 	output.insert(END,"Anyone who has spent a decent amount of time here, likely has honed one or more of the following skills:\n")
 
 	for i in range(len(civ.PROFICIENCIES_LIST)):
-		output.insert(END,"\t*")
-		output.insert(END,civ.PROFICIENCIES_LIST[i],'Entry')
+		output.insert(END,u'\u25C6','List')
+		output.insert(END,f" {civ.PROFICIENCIES_LIST[i]}",'List')
 		output.insert(END,"\n")
 
 	output.insert(END,"\n")
@@ -99,56 +102,66 @@ def generate():
 if __name__=="__main__":
 	# Create gui and Label it
 	gui = tk.Tk()
-	gui.geometry("900x700")
+	gui.geometry("900x800")
 	gui['background']='#999999'
 
 	# Create Frames
 	topframe = Frame(gui)
-	topframe.pack(side="top")
-	topframe['background']='#BBBBBB'
+	topframe.pack(side="left",anchor=NW)
+	topframe['background']='#999999'
 	midframe = Frame(gui)
-	midframe.pack()
-	midframe['background']='#BBBBBB'
+	midframe.pack(side="top")
+	midframe['background']='#999999'
 	botframe = Frame(gui)
-	botframe.pack(side="bottom")
+	botframe.pack(side="left",anchor=NE)
 	botframe['background']='#999999'
 
 	# Create Title and Output
-	Title = tk.Label(topframe, text="5e Civilization Generator",bg='#BBBBBB')
+	Title = tk.Label(topframe, text="5e Civilization Generator",bg='#999999',font=("Calibri 18 bold underline"))
 	outputlbl = tk.Label(botframe, text="Results:",bg='#999999')
-	output = scrolledtext.ScrolledText(botframe, wrap=tk.WORD,width=400,height=150,font=("Calibri 12"),bg='#000000',fg='#FFFFFF')
+	output = scrolledtext.ScrolledText(botframe, wrap=tk.WORD,width=450,height=700,font=("Calibri 12"),bg='#000000',fg='#FFFFFF')
 	output.tag_config('Entry',foreground='pink',font="Calibri 12 bold underline")
+	output.tag_config('List',foreground='pink',font="Calibri 12 bold underline",lmargin1='10m',lmargin2='15m', tabs=['15m'])
+
 
 	# Create User Input Fields and Global Variables
-	kingdomlbl = tk.Label(topframe, text="What is the name of your Kingdom?",bg='#BBBBBB')
+	kingdomlbl = tk.Label(topframe, text="What is the name of your Kingdom?",bg='#999999')
 	kingdom = tk.Entry(topframe, relief=tk.SUNKEN)
 	kingdom.insert(0,'Kingdom')
-	civ_namelbl = tk.Label(topframe, text="What is the name of your Civilization?",bg='#BBBBBB')
+	civ_namelbl = tk.Label(topframe, text="What is the name of your Civilization?",bg='#999999')
 	civ_name = tk.Entry(topframe, relief=tk.SUNKEN)
 	civ_name.insert(0,'Civ')
 
-	#	parser.add_argument('-r', '--read', action='store_true', help='If set, prints out existing Civs and enables Generation Looping', default=False)
-	#	parser.add_argument('-c', '--civ_name', help='Set Civilization Name. *REQUIRED*', default='NULL')
-	#	parser.add_argument('-k', '--kingdom', help='Set Kingdom Name. *REQUIRED*', default='NULL')
-	#	parser.add_argument('--community_size', help='Set Community Size', default='')
-	#	parser.add_argument('--sperm', help='Set Focus', default='')
-	#	parser.add_argument('--social', help='Set Social', default='')
-	#	parser.add_argument('--political', help='Set Political', default='')
-	#	parser.add_argument('--economic', help='Set Economy', default='')
-	#	parser.add_argument('--religion', help='Set Religion', default='')
-	#	parser.add_argument('--military', help='Set Military', default='')
-	#	parser.add_argument('--racial_feature_list', action='append', help='Add Racial Feature', default=[])
-	#	parser.add_argument('--proficiencies_list', action='append', help='Add Proficiency', default=[])
-	#	parser.add_argument('--subclasses_list', action='append', help='Add SubClass', default=[])
+	community_sizelbl = tk.Label(topframe, text="How would you describe the Size of your Civilization?",bg='#999999')
+	community_size = tk.Entry(topframe, relief=tk.SUNKEN)
+	spermlbl = tk.Label(topframe, text="What is the main Focus of your Civilization?",bg='#999999')
+	sperm = tk.Entry(topframe, relief=tk.SUNKEN)
 
+	sociallbl = tk.Label(topframe, text="What is the key Social aspect of your Civilization?",bg='#999999')
+	social = tk.Entry(topframe, relief=tk.SUNKEN)
+	politicallbl = tk.Label(topframe, text="What is the Policial structure of your Civilization?",bg='#999999')
+	political = tk.Entry(topframe, relief=tk.SUNKEN)
+	economiclbl = tk.Label(topframe, text="What is the primary Export of your Civilization?",bg='#999999')
+	economic = tk.Entry(topframe, relief=tk.SUNKEN)
+	religionlbl = tk.Label(topframe, text="What is the nature of your Civilizations Religion?",bg='#999999')
+	religion = tk.Entry(topframe, relief=tk.SUNKEN)
+	militarylbl = tk.Label(topframe, text="What enforces the law in your Civilization?",bg='#999999')
+	military = tk.Entry(topframe, relief=tk.SUNKEN)
+
+	racial_feature_listlbl = tk.Label(topframe, text="What are some features of the families in your Civilization? (Limit 4)",bg='#999999')
+	racial_feature_list = tk.Text(topframe, width=40, height=4, relief=tk.SUNKEN)
+	proficiencies_listlbl = tk.Label(topframe, text="What are some skills honed by the people of your Civilization? (Limit 4)",bg='#999999')
+	proficiencies_list = tk.Text(topframe, width=40, height=4, relief=tk.SUNKEN)
+	subclasses_listlbl = tk.Label(topframe, text="What type of Adventurer got their start in your Civilization?\n(Limit 2, alternate lines for 'Class' and 'Subclass')",bg='#999999')
+	subclasses_list = tk.Text(topframe, width=40, height=4, relief=tk.SUNKEN)
 
 	# Create Buttons
-	generatelbl = tk.Label(topframe, text='', bg='#BBBBBB')
+	generatelbl = tk.Label(topframe, text='', bg='#999999')
 	generate = tk.Button(topframe, relief=tk.RAISED, text="Generate Civilization",command=generate)
-	generatelbl2 = tk.Label(topframe, text='', bg='#BBBBBB')
-	readlbl = tk.Label(topframe, text='', bg='#BBBBBB')
+	generatelbl2 = tk.Label(topframe, text='', bg='#999999')
+	readlbl = tk.Label(topframe, text='', bg='#999999')
 	read = tk.Button(topframe, relief=tk.RAISED, text="Output Civilizations",command=read)
-	readlbl2 = tk.Label(topframe, text='', bg='#BBBBBB')
+	readlbl2 = tk.Label(topframe, text='', bg='#999999')
 
 	# Pack Fields
 	Title.pack(side="top")
@@ -156,14 +169,38 @@ if __name__=="__main__":
 	kingdom.pack(side="top")
 	civ_namelbl.pack(side="top")
 	civ_name.pack(side="top")
+
+	community_sizelbl.pack(side="top")
+	community_size.pack(side="top")
+	spermlbl.pack(side="top")
+	sperm.pack(side="top")
+	sociallbl.pack(side="top")
+	social.pack(side="top")
+	politicallbl.pack(side="top")
+	political.pack(side="top")
+	economiclbl.pack(side="top")
+	economic.pack(side="top")
+	religionlbl.pack(side="top")
+	religion.pack(side="top")
+	militarylbl.pack(side="top")
+	military.pack(side="top")
+
+	racial_feature_listlbl.pack(side="top")
+	racial_feature_list.pack(side="top")
+	proficiencies_listlbl.pack(side="top")
+	proficiencies_list.pack(side="top")
+	subclasses_listlbl.pack(side="top")
+	subclasses_list.pack(side="top")
+
 	generatelbl.pack(side="top")
 	generate.pack(side="top")
-	generatelbl2.pack(side="top")
+	#generatelbl2.pack(side="top")
 	readlbl.pack(side="top")
 	read.pack(side="top")
-	readlbl2.pack(side="top")
-	outputlbl.pack()
-	output.pack(side="bottom")
+	#readlbl2.pack(side="top")
+
+	outputlbl.pack(side="top")
+	output.pack(side="top")
 
 	# Open gui
 	print("You can minimize this gui, but do not close!")
