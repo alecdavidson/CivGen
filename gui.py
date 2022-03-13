@@ -102,6 +102,7 @@ def generate():
 if __name__=="__main__":
 	# Create gui and Label it
 	gui = tk.Tk()
+	gui.title('5e Civilization Generator by Alec Davidson')
 	gui.geometry("900x800")
 	gui['background']='#999999'
 
