@@ -11,8 +11,7 @@ from os.path import exists
 # Connect to DBs
 res_exists = exists('resources.db')
 civ_exists = exists('civilizations.db')
-if (not res_exists):
-	if (not civ_exists):
+if (not (res_exists and civ_exists)):
 		Create_DB()
 
 resources = sl.connect('resources.db') # Static DB
