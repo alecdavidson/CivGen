@@ -4,9 +4,17 @@ Fixed Typos
 """
 ## Import Modules
 import argparse, random, sqlite3 as sl, sys
+from create_db import Create_DB
+from os.path import exists
 
 ## Global References
 # Connect to DBs
+res_exists = exists('resources.db')
+civ_exists = exists('civilizations.db')
+if (not res_exists):
+	if (not civ_exists):
+		Create_DB()
+
 resources = sl.connect('resources.db') # Static DB
 civdb = sl.connect('civilizations.db') # Dynamic DB
 

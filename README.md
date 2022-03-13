@@ -2,12 +2,12 @@
 Generate details for a fictional civilizations using the Kingdom and Civilization name as a random seed.
 
 ## To Do:
-* Add method to generate Databases if they are not found
 * Add ability to save generated Civilizations in the GUI
 
 ### To Run:
 - Source: With Python3.7 installed, open CMD and run `python gui.py`
 - Executable: Unzip `CivGen.zip` and run `CivGen.exe`
+- Both civilization.db and resources.db are required, however if they are missing, CivGen will recreate them.
 
 #### To Compile Executable:
  1. With Python3.7 installed, install `pyinstaller` and run `pyinstaller --onefile -w gui.py`
@@ -16,8 +16,8 @@ Generate details for a fictional civilizations using the Kingdom and Civilizatio
 # Summary of CivGen.py Class and Functions and Databases:
 
 ## DBs
-* resources (Static DB)
-* civdb (Dynamic DB)
+* resources (Static DB) - Stores Resources referenced by CivGen.py
+* civilizations (Dynamic DB) - Stores User generated Civilizations
 
 ## Class and Class Functions
 ### class Civilization()

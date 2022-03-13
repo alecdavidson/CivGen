@@ -3,6 +3,7 @@ Include/
 Lib/
 Scripts/
 dist/
+build/
 
 # Don't track these files
 pyvenv.cfg
