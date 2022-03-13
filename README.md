@@ -6,12 +6,12 @@ Generate details for a fictional civilizations using the Kingdom and Civilizatio
 * Add ability to save generated Civilizations in the GUI
 
 ### To Run:
-Source: With Python3.7 installed, open CMD and run `python gui.py`
-Executable: Unzip `CivGen.zip` and run `CivGen.exe`
+- Source: With Python3.7 installed, open CMD and run `python gui.py`
+- Executable: Unzip `CivGen.zip` and run `CivGen.exe`
 
 #### To Compile Executable:
- With Python3.7 installed, install `pyinstaller` and run `pyinstaller --onefile -w gui.py`
- Run `gui.py`
+ 1. With Python3.7 installed, install `pyinstaller` and run `pyinstaller --onefile -w gui.py`
+ 2. Run `gui.py`
 
 # Summary of CivGen.py Class and Functions and Databases:
 
