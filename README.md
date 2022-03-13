@@ -1,8 +1,8 @@
-# Civilization Generator
+# Civilization Generator V1.0
 Generate details for a fictional civilizations using the Kingdom and Civilization name as a random seed.
 
 ## To Do:
-* Package into standalone executable
+* Add method to generate Databases if they are not found
 * Add ability to save generated Civilizations in the GUI
 * Add ability to update or import/export databases from the GUI
 
