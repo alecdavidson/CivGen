@@ -13,7 +13,6 @@ pyvenv.cfg
 *.com
 *.class
 *.dll
-*.exe
 *.o
 *.so
 *.pyc
