@@ -2,6 +2,7 @@
 Include/
 Lib/
 Scripts/
+dist/
 
 # Don't track these files
 pyvenv.cfg
@@ -19,6 +20,7 @@ update_db.py
 *.pyc
 *.bak
 *.bat
+*.spec
 
 # Packages #
 ############
@@ -31,4 +33,3 @@ update_db.py
 *.jar
 *.rar
 *.tar
-*.zip

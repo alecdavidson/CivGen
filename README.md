@@ -2,7 +2,6 @@
 Generate details for a fictional civilizations using the Kingdom and Civilization name as a random seed.
 
 ## To Do:
-* Update GUI to allow all CLI inputs
 * Package into standalone executable
 * Add ability to save generated Civilizations in the GUI
 * Add ability to update or import/export databases from the GUI
