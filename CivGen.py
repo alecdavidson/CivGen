@@ -3,19 +3,26 @@ CivGen V3.2 by Alec Davidson
 Fixed Typos
 """
 ## Import Modules
-import argparse, random, sqlite3 as sl, sys
+import argparse, os, random, sqlite3 as sl, sys
 from create_db import Create_DB
 from os.path import exists
 
 ## Global References
 # Connect to DBs
-res_exists = exists('resources.db')
-civ_exists = exists('civilizations.db')
-if (not (res_exists and civ_exists)):
-		Create_DB()
 
-resources = sl.connect('resources.db') # Static DB
-civdb = sl.connect('civilizations.db') # Dynamic DB
+# Found on https://github.com/pyinstaller/pyinstaller/issues/5204
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
+resources = sl.connect(resource_path('resources.db')) # Static DB
+civdb = sl.connect(resource_path('civilizations.db')) # Dynamic DB
 
 # Define Class
 class Civilization():
