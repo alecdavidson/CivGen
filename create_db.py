@@ -1,13 +1,19 @@
 
-import sqlite3 as sl
+import sqlite3 as sl, os
 from os.path import exists
 
 def Create_DB():
+	# Setup Filepath
+	dir_path = os.path.join(os.environ['APPDATA'], 'CivGen')
+	if not os.path.exists(dir_path):
+	     os.makedirs(dir_path)
+
 	# Check if resources.db exists
-	res_exists = exists('resources.db')
+	resources_path = os.path.join(dir_path, 'resources.db') # Static DB
+	res_exists = os.path.exists(resources_path)
 	if (not res_exists):
 		# Create resources.db
-		resources = sl.connect('resources.db')
+		resources = sl.connect(resources_path)
 		res = resources.cursor()
 
 		# Create Tables
@@ -368,9 +374,10 @@ def Create_DB():
 
 	## civilizations.db
 	# Check if civilizations.db exists
-	civ_exists = exists('civilizations.db')
+	civdb_path = os.path.join(dir_path, 'civilizations.db') # Dynamic DB
+	civ_exists = exists(civdb_path)
 	if (not civ_exists):
-		civilizations = sl.connect('civilizations.db')
+		civilizations = sl.connect(civdb_path)
 		civ = civilizations.cursor()
 
 		# Create Tables
