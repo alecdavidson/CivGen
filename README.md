@@ -1,13 +1,14 @@
-# 5e Civilization Generator V1.0
-Generate details for a fictional civilizations using the Kingdom and Civilization name as a random seed. 
+# 5e Civilization Generator V0.1
+Generate details for a fictional civilizations using the Kingdom and Civilization name as a random seed.
 This is a fun project and is NOT affiliated with Wizards of the Coast.
 
 ## To Do:
-* Add ability to save generated Civilizations in the GUI
+* Improve README
+* Add Mac OSX and Linux compatibility
 
 ### To Run:
-- Source: With Python3.7 installed, open CMD and run `python gui.py`
 - Executable: Unzip `CivGen.zip` and run `CivGen.exe`
+- Source: With Python3.7 installed, open CMD and run `python gui.py`
 - Both civilization.db and resources.db are required, however if they are missing, CivGen will recreate them.
 
 #### To Compile Executable:
