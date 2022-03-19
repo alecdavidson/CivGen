@@ -1,6 +1,5 @@
 """
-CivGen V3.2 by Alec Davidson
-Fixed Typos
+CivGen by Alec Davidson
 """
 ## Import Modules
 import argparse, os, random, sqlite3 as sl, sys
