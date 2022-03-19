@@ -5,7 +5,8 @@ from tkinter import scrolledtext
 from CivGen import Civilization
 from CivGen import READ_LIST
 
-## Establish Functions
+## Establish Functions and Variables
+civ = ''
 # Read entries from civilizations.db
 def read():
 	# Grab global variables
@@ -20,8 +21,17 @@ def read():
 		output.insert(END,f" {i}\n",'List')
 	output.insert(END,"\n")
 
+#Save latest generated Civilization to civilizations.db
+def save():
+	global civ
+	print(f"Saving {civ.CIV_NAME} of {civ.KINGDOM} (ID: {civ.id})")
+	if civ.id==-1: civ.SAVE_DB()
+	else: civ.UPDATE_DB()
+
+
 # Create Civilization object and execute BUILD_CIVILIZATION()
 def generate():
+	global civ
 	# Fromat List Inputs
 	racial_feature_list_formated = [racial_feature_list.get("1.0", "1.0 lineend"),racial_feature_list.get("2.0", "2.0 lineend"),racial_feature_list.get("3.0", "3.0 lineend"),racial_feature_list.get("4.0", "4.0 lineend")]
 	proficiencies_list_formated = [proficiencies_list.get("1.0", "1.0 lineend"),proficiencies_list.get("2.0", "2.0 lineend"),proficiencies_list.get("3.0", "3.0 lineend"),proficiencies_list.get("4.0", "4.0 lineend")]
@@ -157,12 +167,10 @@ if __name__=="__main__":
 	subclasses_list = tk.Text(topframe, width=40, height=4, relief=tk.SUNKEN)
 
 	# Create Buttons
-	generatelbl = tk.Label(topframe, text='', bg='#999999')
+	space = tk.Label(topframe, text='', bg='#999999')
 	generate = tk.Button(topframe, relief=tk.RAISED, text="Generate Civilization",command=generate)
-	generatelbl2 = tk.Label(topframe, text='', bg='#999999')
-	readlbl = tk.Label(topframe, text='', bg='#999999')
-	read = tk.Button(topframe, relief=tk.RAISED, text="Output Civilizations",command=read)
-	readlbl2 = tk.Label(topframe, text='', bg='#999999')
+	read = tk.Button(topframe, relief=tk.RAISED, text="Print Saved Civilizations",command=read)
+	save = tk.Button(topframe, relief=tk.RAISED, text="Save Latest Civilization",command=save)
 
 	# Pack Fields
 	Title.pack(side="top")
@@ -193,12 +201,10 @@ if __name__=="__main__":
 	subclasses_listlbl.pack(side="top")
 	subclasses_list.pack(side="top")
 
-	generatelbl.pack(side="top")
+	space.pack(side="top")
 	generate.pack(side="top")
-	#generatelbl2.pack(side="top")
-	readlbl.pack(side="top")
+	save.pack(side="top")
 	read.pack(side="top")
-	#readlbl2.pack(side="top")
 
 	outputlbl.pack(side="top")
 	output.pack(side="top")

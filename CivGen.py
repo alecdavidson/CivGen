@@ -5,24 +5,21 @@ Fixed Typos
 ## Import Modules
 import argparse, os, random, sqlite3 as sl, sys
 from create_db import Create_DB
-from os.path import exists
 
 ## Global References
 # Connect to DBs
+# Found on https://stackoverflow.com/a/34618951
+dir_path = os.path.join(os.environ['APPDATA'], 'CivGen')
+Create_DB()
 
-# Found on https://github.com/pyinstaller/pyinstaller/issues/5204
-def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
+resources = os.path.join(dir_path, 'resources.db') # Static DB
+sl.connect(resources)
 
-    return os.path.join(base_path, relative_path)
+civdb = os.path.join(dir_path, 'civilizations.db') # Dynamic DB
+sl.connect(civdb)
 
-resources = sl.connect(resource_path('resources.db')) # Static DB
-civdb = sl.connect(resource_path('civilizations.db')) # Dynamic DB
+resources = sl.connect(resources) # Static DB
+civdb = sl.connect(civdb) # Dynamic DB
 
 # Define Class
 class Civilization():
@@ -413,31 +410,6 @@ if __name__=="__main__":
 	while len(args.racial_feature_list) < 4: args.racial_feature_list.append("")
 	while len(args.proficiencies_list) < 4: args.proficiencies_list.append("")
 	while len(args.subclasses_list) < 4: args.subclasses_list.append("")
-
-#	# This loop function will be used to loop generation in the CLI
-#	def loop():
-#		# Display a list of all saved Civs
-#		READ_LIST()
-#
-#		# Grab Civ Name, all other fields will be generated randomly
-#		print("What is the name of your Kingdom?")
-#		kingdom = input("> ")
-#		print("What is the name of your Civilization?")
-#		civ_name = input("> ")
-#
-#		# Initialize object and build
-#		civ = Civilization(CIV_NAME=civ_name,KINGDOM=kingdom)
-#		civ.BUILD_CIVILIZATION()
-#
-#		# Print out results
-#		civ.PRINT_CIV()
-#
-#		# Set args.read to true to prevent additional generation
-#		args.read = True
-#		return 1
-#
-#	# If True run loop(), if False generate one Civ using any/all manually entered values
-#	while False: loop()
 
 	# If args.read==True, display saved Civs and do nothing, else generate
 	if args.read: print(READ_LIST(args.kingdom))
