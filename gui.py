@@ -7,6 +7,7 @@ from CivGen import READ_LIST
 
 ## Establish Functions and Variables
 civ = ''
+
 # Read entries from civilizations.db
 def read():
 	# Grab global variables
@@ -15,11 +16,15 @@ def read():
 	civ_list = READ_LIST(kingdom.get())
 	# Print to CLI and output
 	print(civ_list)
-	output.insert(END,"City in Kingdom\n_______________\n")
+	output.insert(END,"City in Kingdom\n------------------------------\n")
 	for i in civ_list:
 		output.insert(END,u'\u25C6','List')
 		output.insert(END,f" {i}\n",'List')
-	output.insert(END,"\n")
+	output.insert(END,"_____________________________________________\n\n")
+	output.see(END)
+
+	return 1
+
 
 #Save latest generated Civilization to civilizations.db
 def save():
@@ -27,6 +32,12 @@ def save():
 	print(f"Saving {civ.CIV_NAME} of {civ.KINGDOM} (ID: {civ.id})")
 	if civ.id==-1: civ.SAVE_DB()
 	else: civ.UPDATE_DB()
+
+	output.insert(END,f"Saving {civ.CIV_NAME} of {civ.KINGDOM} (ID: {civ.id})")
+	output.insert(END,"\n_____________________________________________\n\n")
+	output.see(END)
+
+	return 1
 
 
 # Create Civilization object and execute BUILD_CIVILIZATION()
@@ -102,11 +113,11 @@ def generate():
 	output.insert(END,f"{civ.SUBCLASSES_LIST[2]}s ({civ.SUBCLASSES_LIST[3]})",'Entry')
 	output.insert(END,")\n")
 
-	output.insert(END,"-------------------------\n")
-
-	output.insert(END,"\n")
+	output.insert(END,"_____________________________________________\n\n")
+	output.see(END)
 
 	return 1
+
 
 ## Execute
 if __name__=="__main__":

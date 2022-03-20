@@ -374,15 +374,15 @@ class Civilization():
 def READ_LIST(kingdom):
 	# Connect to Civilizations DB and grab all civ_names
 	# If a Kingdom has been provided, only search for civilizations under that Kingdom
-	if kingdom=='':sql = "select civ_name,kingdom from civilizations;"
-	else: sql = f"select civ_name,kingdom from civilizations where kingdom like '{kingdom}';"
+	if kingdom=='':sql = "select id,civ_name,kingdom from civilizations;"
+	else: sql = f"select id,civ_name,kingdom from civilizations where kingdom like '{kingdom}';"
 	with civdb:
 		civ_list = civdb.execute(sql)
 
 	# Parse through the returned data and restore for easier use
 	civ_name_list = []
 	for i in civ_list:
-		civ_name_list.append(f'{i[0]} in {i[1]}')
+		civ_name_list.append(f'({i[0]}) {i[1]} in {i[2]}')
 
 	return civ_name_list
 
