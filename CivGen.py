@@ -3,7 +3,7 @@ CivGen by Alec Davidson
 """
 ## Import Modules
 import argparse, os, random, sqlite3 as sl, sys
-from create_db import Create_DB
+from manage_db import Create_DB
 
 ## Global References
 # Connect to DBs
