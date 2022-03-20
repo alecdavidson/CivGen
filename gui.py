@@ -126,6 +126,7 @@ if __name__=="__main__":
 	gui.title('5e Civilization Generator by Alec Davidson')
 	gui.geometry("900x800")
 	gui['background']='#999999'
+	gui.iconbitmap("d20.ico")
 
 	# Create Frames
 	topframe = Frame(gui)
