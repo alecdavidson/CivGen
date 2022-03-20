@@ -1,7 +1,6 @@
 
 import csv, os, pandas as pd, sqlite3 as sl
 from os.path import exists
-from sqlite3 import Error
 
 def Create_DB():
 	# Setup Filepath
@@ -455,7 +454,16 @@ def Export_DB(database):
 	return 1
 
 
+def Import_DB(database):
+	dir_path = os.path.join(os.environ['APPDATA'], 'CivGen')
+	db_path = os.path.join(dir_path, database)
+	path_exists = os.path.exists(os.path.join(dir_path,database.replace('.db','')))
+	conn = sl.connect(db_path, isolation_level=None,detect_types=sl.PARSE_COLNAMES)
+
+	return 1
+
+
 if __name__ == "__main__":
-	# Export_DB('resources.db')
-	# Export_DB('civilizations.db')
+	Import_DB('resources.db')
+	Import_DB('civilizations.db')
 	pass

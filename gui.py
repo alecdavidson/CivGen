@@ -1,7 +1,8 @@
 ## Imports
+import manage_db, tkinter as tk
 from tkinter import *
-import tkinter as tk
 from tkinter import scrolledtext
+from tkinter import ttk
 from CivGen import Civilization
 from CivGen import READ_LIST
 
@@ -119,12 +120,31 @@ def generate():
 	return 1
 
 
+def imexport():
+	imex = Toplevel(gui)
+	imex.geometry("400x200")
+	imex['background']='#999999'
+	imex.title('Import/Export Databases')
+
+	leftframe = Frame(imex)
+	leftframe.pack(side="top",anchor=NW)
+	rightframe = Frame(imex)
+	rightframe.pack(side="top",anchor=NE)
+
+	exp_res_lbl = tk.Label(leftframe, text='', bg='#999999')
+	exp_res_btn = tk.Button(leftframe, relief=tk.RAISED, text="Export Resources to CSV",command=lambda: manage_db.Export_DB('resources.db'))
+	exp_res_lbl.pack(side="top")
+	exp_res_btn.pack(side="top")
+
+	return 1
+
+
 ## Execute
 if __name__=="__main__":
 	# Create gui and Label it
 	gui = tk.Tk()
 	gui.title('5e Civilization Generator by Alec Davidson')
-	gui.geometry("900x800")
+	gui.geometry("950x850")
 	gui['background']='#999999'
 	gui.iconbitmap("d20.ico")
 
@@ -183,6 +203,7 @@ if __name__=="__main__":
 	generate = tk.Button(topframe, relief=tk.RAISED, text="Generate Civilization",command=generate)
 	read = tk.Button(topframe, relief=tk.RAISED, text="Print Saved Civilizations",command=read)
 	save = tk.Button(topframe, relief=tk.RAISED, text="Save Latest Civilization",command=save)
+	imex = tk.Button(topframe, relief=tk.RAISED, text="Import/Export Databases",command=imexport)
 
 	# Pack Fields
 	Title.pack(side="top")
@@ -217,6 +238,7 @@ if __name__=="__main__":
 	generate.pack(side="top")
 	save.pack(side="top")
 	read.pack(side="top")
+	imex.pack(side="top")
 
 	outputlbl.pack(side="top")
 	output.pack(side="top")
