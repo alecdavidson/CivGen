@@ -4,6 +4,8 @@ Lib/
 Scripts/
 dist/
 build/*
+resources/*
+civilizations/*
 
 # Don't track these files
 pyvenv.cfg

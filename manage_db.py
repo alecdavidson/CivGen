@@ -1,6 +1,7 @@
 
-import sqlite3 as sl, os
+import csv, os, pandas as pd, sqlite3 as sl
 from os.path import exists
+from sqlite3 import Error
 
 def Create_DB():
 	# Setup Filepath
@@ -431,5 +432,30 @@ def Create_DB():
 		civilizations.commit()
 		civilizations.close()
 
-if __name__ == '__main__':
-	Create_DB()
+		return 1
+
+
+def Export_DB(database):
+	dir_path = os.path.join(os.environ['APPDATA'], 'CivGen')
+	db_path = os.path.join(dir_path, database)
+	path_exists = os.path.exists(os.path.join(dir_path,database.replace('.db','')))
+	try: os.mkdir(f"{os.getcwd()}\{database.replace('.db','')}")
+	except: pass
+	conn = sl.connect(db_path, isolation_level=None,detect_types=sl.PARSE_COLNAMES)
+
+	db_all_tables = pd.read_sql_query("SELECT name FROM sqlite_sequence", conn)
+	db_all_table_names = db_all_tables.values.tolist()
+	for i in db_all_table_names:
+		print(i[0])
+		db_tables = pd.read_sql_query(f"SELECT * FROM {i[0]}", conn)
+		db_tables.to_csv(f"{database.replace('.db','')}/{i[0]}.csv", sep='\t', index=False)
+
+	conn.close()
+
+	return 1
+
+
+if __name__ == "__main__":
+	# Export_DB('resources.db')
+	# Export_DB('civilizations.db')
+	pass

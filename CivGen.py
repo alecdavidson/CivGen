@@ -7,7 +7,6 @@ from manage_db import Create_DB
 
 ## Global References
 # Connect to DBs
-# Found on https://stackoverflow.com/a/34618951
 dir_path = os.path.join(os.environ['APPDATA'], 'CivGen')
 Create_DB()
 
