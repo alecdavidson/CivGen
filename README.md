@@ -98,20 +98,6 @@ Parse through the returned data and restore for easier use
 Parse the CLI for manually entered entities
 Append nothing to the lists in order to match desired length
 
-### loop() **Commented Out**
-~~This loop function will be used to loop generation in the CLI
-Display a list of all saved Civs
-Grab Civ Name, all other fields will be generated randomly
-Initialize object and build
-Print out results
-Set args.read to true to prevent additional generation~~
-
-### while False: loop() **Commented Out**
-~~If True run loop(), if False generate one Civ using any/all manually entered values
-If args.read==True, display saved Civs and do nothing, else generate
-Create object with CLI Arguments and Build
-Print out results and ask to save/update~~
-
 # Summary of gui.py Functions:
 
 ### read():
@@ -137,6 +123,4 @@ Pack Fields
 Open gui
 
 ###### Additional Notes
-> Main.py is essential version 1 of this before I made several improvements
-
 > A large part of this is inspired by Dael Kingsmill's video on Creating Towns and NPCs: https://youtu.be/sJd6g--Ok_A
