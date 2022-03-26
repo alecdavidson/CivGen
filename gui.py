@@ -358,5 +358,5 @@ if __name__ == "__main__":
     output.pack(side="top")
 
     # Open gui
-    print("You can minimize this gui, but do not close!")
+    print("You can minimize this window, but do not close!")
     gui.mainloop()
