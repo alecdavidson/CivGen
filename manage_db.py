@@ -1,4 +1,4 @@
-import csv, os, pandas as pd, sqlite3 as sl
+import csv, os, pandas as pd, re, sqlite3 as sl
 from os.path import exists
 
 
@@ -18,10 +18,11 @@ def Create_DB():
 
         # Create Tables
         res.execute(
-            """CREATE TABLE 'CLASS_LIST' (
-		'id' integer not null primary key autoincrement,
-		'class' text not null,
-		'subclass' text not null
+            """CREATE TABLE CLASS_LIST (
+		id integer not null primary key autoincrement,
+		name varchar(255) NOT NULL,
+		type varchar(255) NOT NULL,
+		description varchar(255)
 		)"""
         )
         res.execute(
@@ -41,7 +42,7 @@ def Create_DB():
 		id INTEGER PRIMARY KEY,
 		name varchar(255) NOT NULL,
 		type varchar(255) NOT NULL,
-		description varchar(255) NOT NULL
+		description varchar(255)
 		)"""
         )
         res.execute(
@@ -49,7 +50,7 @@ def Create_DB():
 		id INTEGER PRIMARY KEY,
 		name varchar(255) NOT NULL,
 		type varchar(255) NOT NULL,
-		description varchar(255) NOT NULL
+		description varchar(255)
 		)"""
         )
         res.execute(
@@ -654,352 +655,352 @@ def Create_DB():
             "insert into 'COMMUNITY_SIZE_LIST' ('id', 'name') values (3, 'City');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Artificer', 1, 'Alchemist');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Artificer', 1, 'Alchemist');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Artificer', 2, 'Armorer');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Artificer', 2, 'Armorer');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Artificer', 3, 'Artillerist');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Artificer', 3, 'Artillerist');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Artificer', 4, 'Battle Smith');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Artificer', 4, 'Battle Smith');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Barbarian', 5, 'Path of the Ancestral Guardian');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Barbarian', 5, 'Path of the Ancestral Guardian');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Barbarian', 6, 'Path of the Battlerager');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Barbarian', 6, 'Path of the Battlerager');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Barbarian', 7, 'Path of the Beast');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Barbarian', 7, 'Path of the Beast');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Barbarian', 8, 'Path of the Berserker');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Barbarian', 8, 'Path of the Berserker');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Barbarian', 9, 'Path of the Storm Herald');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Barbarian', 9, 'Path of the Storm Herald');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Barbarian', 10, 'Path of the Totem Warrior');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Barbarian', 10, 'Path of the Totem Warrior');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Barbarian', 11, 'Path of Wild Magic');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Barbarian', 11, 'Path of Wild Magic');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Barbarian', 12, 'Path of the Zealot');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Barbarian', 12, 'Path of the Zealot');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Bard', 13, 'College of Creation');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Bard', 13, 'College of Creation');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Bard', 14, 'College of Eloquence');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Bard', 14, 'College of Eloquence');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Bard', 15, 'College of Glamour');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Bard', 15, 'College of Glamour');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Bard', 16, 'College of Lore');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Bard', 16, 'College of Lore');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Bard', 17, 'College of Spirits');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Bard', 17, 'College of Spirits');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Bard', 18, 'College of Swords');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Bard', 18, 'College of Swords');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Bard', 19, 'College of Valor');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Bard', 19, 'College of Valor');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Bard', 20, 'College of Whispers');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Bard', 20, 'College of Whispers');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Cleric', 21, 'Arcana Domain');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Cleric', 21, 'Arcana Domain');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Cleric', 22, 'Death Domain');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Cleric', 22, 'Death Domain');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Cleric', 23, 'Forge Domain');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Cleric', 23, 'Forge Domain');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Cleric', 24, 'Grave Domain');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Cleric', 24, 'Grave Domain');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Cleric', 25, 'Knowledge Domain');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Cleric', 25, 'Knowledge Domain');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Cleric', 26, 'Life Domain');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Cleric', 26, 'Life Domain');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Cleric', 27, 'Light Domain');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Cleric', 27, 'Light Domain');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Cleric', 28, 'Nature Domain');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Cleric', 28, 'Nature Domain');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Cleric', 29, 'Order Domain');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Cleric', 29, 'Order Domain');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Cleric', 30, 'Peace Domain');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Cleric', 30, 'Peace Domain');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Cleric', 31, 'Tempest Domain');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Cleric', 31, 'Tempest Domain');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Cleric', 32, 'Trickery Domain');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Cleric', 32, 'Trickery Domain');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Cleric', 33, 'Twilight Domain');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Cleric', 33, 'Twilight Domain');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Cleric', 34, 'War Domain');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Cleric', 34, 'War Domain');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Druid', 35, 'Circle of Dreams');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Druid', 35, 'Circle of Dreams');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Druid', 36, 'Circle of the Land');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Druid', 36, 'Circle of the Land');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Druid', 37, 'Circle of the Moon');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Druid', 37, 'Circle of the Moon');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Druid', 38, 'Circle of the Shepherd');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Druid', 38, 'Circle of the Shepherd');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Druid', 39, 'Circle of Spores');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Druid', 39, 'Circle of Spores');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Druid', 40, 'Circle of Stars');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Druid', 40, 'Circle of Stars');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Druid', 41, 'Circle of Wildfire');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Druid', 41, 'Circle of Wildfire');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Fighter', 42, 'Arcane Archer');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Fighter', 42, 'Arcane Archer');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Fighter', 43, 'Banneret');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Fighter', 43, 'Banneret');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Fighter', 44, 'Battle Master');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Fighter', 44, 'Battle Master');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Fighter', 45, 'Cavalier');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Fighter', 45, 'Cavalier');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Fighter', 46, 'Champion');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Fighter', 46, 'Champion');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Fighter', 47, 'Echo Knight');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Fighter', 47, 'Echo Knight');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Fighter', 48, 'Eldritch Knight');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Fighter', 48, 'Eldritch Knight');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Fighter', 49, 'Psi Warrior');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Fighter', 49, 'Psi Warrior');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Fighter', 50, 'Rune Knight');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Fighter', 50, 'Rune Knight');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Fighter', 51, 'Samurai');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Fighter', 51, 'Samurai');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Monk', 52, 'Way of Mercy');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Monk', 52, 'Way of Mercy');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Monk', 53, 'Way of the Ascendant Dragon');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Monk', 53, 'Way of the Ascendant Dragon');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Monk', 54, 'Way of the Astral Self');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Monk', 54, 'Way of the Astral Self');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Monk', 55, 'Way of the Drunken Master');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Monk', 55, 'Way of the Drunken Master');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Monk', 56, 'Way of the Four Elements');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Monk', 56, 'Way of the Four Elements');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Monk', 57, 'Way of the Kensei');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Monk', 57, 'Way of the Kensei');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Monk', 58, 'Way of the Long Death');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Monk', 58, 'Way of the Long Death');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Monk', 59, 'Way of the Open Hand');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Monk', 59, 'Way of the Open Hand');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Monk', 60, 'Way of Shadow');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Monk', 60, 'Way of Shadow');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Monk', 61, 'Way of the Sun Soul');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Monk', 61, 'Way of the Sun Soul');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Paladin', 62, 'Oath of the Ancients');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Paladin', 62, 'Oath of the Ancients');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Paladin', 63, 'Oath of Conquest');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Paladin', 63, 'Oath of Conquest');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Paladin', 64, 'Oath of the Crown');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Paladin', 64, 'Oath of the Crown');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Paladin', 65, 'Oath of Devotion');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Paladin', 65, 'Oath of Devotion');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Paladin', 66, 'Oath of Glory');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Paladin', 66, 'Oath of Glory');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Paladin', 67, 'Oath of Redemption');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Paladin', 67, 'Oath of Redemption');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Paladin', 68, 'Oath of Vengeance');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Paladin', 68, 'Oath of Vengeance');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Paladin', 69, 'Oath of the Watchers');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Paladin', 69, 'Oath of the Watchers');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Paladin', 70, 'Oathbreaker');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Paladin', 70, 'Oathbreaker');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Ranger', 71, 'Beast Master Conclave');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Ranger', 71, 'Beast Master Conclave');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Ranger', 72, 'Drakewarden');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Ranger', 72, 'Drakewarden');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Ranger', 73, 'Fey Wanderer');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Ranger', 73, 'Fey Wanderer');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Ranger', 74, 'Gloom Stalker Conclave');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Ranger', 74, 'Gloom Stalker Conclave');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Ranger', 75, 'Horizon Walker Conclave');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Ranger', 75, 'Horizon Walker Conclave');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Ranger', 76, 'Hunter Conclave');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Ranger', 76, 'Hunter Conclave');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Ranger', 77, 'Monster Slayer Conclave');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Ranger', 77, 'Monster Slayer Conclave');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Ranger', 78, 'Swarmkeeper');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Ranger', 78, 'Swarmkeeper');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Rogue', 79, 'Arcane Trickster');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Rogue', 79, 'Arcane Trickster');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Rogue', 80, 'Assassin');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Rogue', 80, 'Assassin');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Rogue', 81, 'Inquisitive');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Rogue', 81, 'Inquisitive');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Rogue', 82, 'Mastermind');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Rogue', 82, 'Mastermind');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Rogue', 83, 'Phantom');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Rogue', 83, 'Phantom');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Rogue', 84, 'Scout');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Rogue', 84, 'Scout');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Rogue', 85, 'Soulknife');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Rogue', 85, 'Soulknife');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Rogue', 86, 'Swashbuckler');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Rogue', 86, 'Swashbuckler');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Rogue', 87, 'Thief');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Rogue', 87, 'Thief');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Sorcerer', 88, 'Aberrant Mind');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Sorcerer', 88, 'Aberrant Mind');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Sorcerer', 89, 'Clockwork Soul');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Sorcerer', 89, 'Clockwork Soul');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Sorcerer', 90, 'Draconic Bloodline');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Sorcerer', 90, 'Draconic Bloodline');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Sorcerer', 91, 'Divine Soul');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Sorcerer', 91, 'Divine Soul');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Sorcerer', 92, 'Shadow Magic');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Sorcerer', 92, 'Shadow Magic');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Sorcerer', 93, 'Storm Sorcery');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Sorcerer', 93, 'Storm Sorcery');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Sorcerer', 94, 'Wild Magic');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Sorcerer', 94, 'Wild Magic');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Warlock', 95, 'Archfey');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Warlock', 95, 'Archfey');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Warlock', 96, 'Celestial');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Warlock', 96, 'Celestial');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Warlock', 97, 'Fathomless');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Warlock', 97, 'Fathomless');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Warlock', 98, 'Fiend');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Warlock', 98, 'Fiend');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Warlock', 99, 'The Genie');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Warlock', 99, 'The Genie');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Warlock', 100, 'Great Old One');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Warlock', 100, 'Great Old One');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Warlock', 101, 'Hexblade');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Warlock', 101, 'Hexblade');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Warlock', 102, 'Undead');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Warlock', 102, 'Undead');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Warlock', 103, 'Undying');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Warlock', 103, 'Undying');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Wizard', 104, 'School of Abjuration');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Wizard', 104, 'School of Abjuration');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Wizard', 105, 'School of Bladesinging');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Wizard', 105, 'School of Bladesinging');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Wizard', 106, 'School of Chronurgy');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Wizard', 106, 'School of Chronurgy');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Wizard', 107, 'School of Conjuration');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Wizard', 107, 'School of Conjuration');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Wizard', 108, 'School of Divination');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Wizard', 108, 'School of Divination');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Wizard', 109, 'School of Enchantment');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Wizard', 109, 'School of Enchantment');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Wizard', 110, 'School of Evocation');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Wizard', 110, 'School of Evocation');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Wizard', 111, 'School of Graviturgy');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Wizard', 111, 'School of Graviturgy');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Wizard', 112, 'School of Illusion');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Wizard', 112, 'School of Illusion');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Wizard', 113, 'School of Necromancy');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Wizard', 113, 'School of Necromancy');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Wizard', 114, 'Order of Scribes');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Wizard', 114, 'Order of Scribes');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Wizard', 115, 'School of Transmutation');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Wizard', 115, 'School of Transmutation');"
         )
         res.execute(
-            "insert into 'CLASS_LIST' ('class', 'id', 'subclass') values ('Wizard', 116, 'School of War Magic');"
+            "insert into 'CLASS_LIST' ('type', 'id', 'name') values ('Wizard', 116, 'School of War Magic');"
         )
 
         # Commit Changes and Close
@@ -1110,14 +1111,37 @@ def Export_DB(database):
 
 def Import_DB(database):
     dir_path = os.path.join(os.environ["APPDATA"], "CivGen")
-    db_path = os.path.join(dir_path, database)
-    path_exists = os.path.exists(os.path.join(dir_path, database.replace(".db", "")))
+    db_path = os.path.join(dir_path, f"X{database}")
+    csv_path = os.path.join(os.getcwd(), database.replace(".db", ""))
     conn = sl.connect(db_path, isolation_level=None, detect_types=sl.PARSE_COLNAMES)
 
+    file_list = []
+
+    for i in os.walk(csv_path):
+        for j in i[2]:
+            file_list.append(j)
+
+    file_list = ["SPERM_LIST.csv", "COMMUNITY_SIZE_LIST.csv"]
+
+    for k in file_list:
+        with open(f"{csv_path}\{k}", "r") as table_name:
+            count = 0
+            columns = ""
+            rows = []
+            for l in table_name:
+                if count == 0:
+                    columns = l.replace("\t", ",").replace("\n", "")
+                else:
+                    row = re.sub("\t", "','", l, count=len(re.findall("\t", l)))
+                    rows.append(row)
+                    print(
+                        l  # f"insert into {k.replace('.csv','')} ({columns}) VALUES ({row})"
+                    )
+                count += 1
     return 1
 
 
 if __name__ == "__main__":
+    # Export_DB("resources.db")
     Import_DB("resources.db")
-    Import_DB("civilizations.db")
     pass

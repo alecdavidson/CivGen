@@ -303,16 +303,20 @@ class Civilization:
             f"Families that have lived here for generations tend to have one or more of the following features:"
         )
         for i in range(len(self.RACIAL_FEATURE_LIST)):
-            print(f"\t*{self.RACIAL_FEATURE_LIST[i]}")
+            print(
+                f"\t* {self.RACIAL_FEATURE_LIST[i][0]} ({self.RACIAL_FEATURE_LIST[i][1]})"
+            )
         print()
         print(
             f"Anyone who has spent a decent amount of time here, likely has honed one or more of the following skills:"
         )
         for i in range(len(self.PROFICIENCIES_LIST)):
-            print(f"\t*{self.PROFICIENCIES_LIST[i]}")
+            print(
+                f"\t* {self.PROFICIENCIES_LIST[i][0]} ({self.PROFICIENCIES_LIST[i][1]})"
+            )
         print()
         print(
-            f"Adventurers who have found their start in {self.CIV_NAME} tend to become {self.SUBCLASSES_LIST[0]}s ({self.SUBCLASSES_LIST[1]}) or {self.SUBCLASSES_LIST[2]}s ({self.SUBCLASSES_LIST[3]})"
+            f"Adventurers who have found their start in {self.CIV_NAME} tend to become {self.SUBCLASSES_LIST[0]} ({self.SUBCLASSES_LIST[1]}s) or {self.SUBCLASSES_LIST[2]} ({self.SUBCLASSES_LIST[3]}s)"
         )
 
         return 1
@@ -329,32 +333,18 @@ class Civilization:
             id = random.randint(1, limit)
             # Grab entry
             try:
-                # Most of these lists use name as their key
-                try:
-                    entry = resources.execute(
-                        f"select name,type,description from {table} where id = {id};"
-                    )
-                    temp = []
-                    for i in entry:
-                        temp.append(i[0])
-                        temp.append(i[1])
-                        temp.append(i[2])
-                    entry = temp
-                except:
-                    entry = resources.execute(
-                        f"select name from {table} where id = {id};"
-                    )
-                    entry = [i[0] for i in entry][0]
-            except:
-                # I decided it was a good idea to do Class/Subclass differently
                 entry = resources.execute(
-                    f"select class,subclass from {table} where id = {id};"
+                    f"select name,type,description from {table} where id = {id};"
                 )
                 temp = []
                 for i in entry:
                     temp.append(i[0])
                     temp.append(i[1])
+                    temp.append(i[2])
                 entry = temp
+            except:
+                entry = resources.execute(f"select name from {table} where id = {id};")
+                entry = [i[0] for i in entry][0]
 
             # Final Result is returned
             return entry
@@ -364,24 +354,19 @@ class Civilization:
         list = []
         list2 = []
         # Use for/while loops to check for duplicates
-        if table == "CLASS_LIST":
-            for i in range(total):
-                temp = self.GET_DB_RANDOM(table)
-                while temp in list:
-                    temp = self.GET_DB_RANDOM(table)
-                list.append(temp)
-        else:
-            for i in range(total):
-                temp = self.GET_DB_RANDOM(table)
-                for i in range(len(list)):
-                    if temp[1] == list2[i]:
-                        while temp[1] in list2:
-                            temp = self.GET_DB_RANDOM(table)
+        for i in range(total):
+            temp = self.GET_DB_RANDOM(table)
+            for i in range(len(list)):
+                if temp[1] == list2[i]:
+                    while temp[1] in list2:
+                        temp = self.GET_DB_RANDOM(table)
 
-                list.append(f"{temp[0]} [{temp[2]}]")
-                list2.append(temp[1])
+            list.append("")
+            list2.append("")
+            list[len(list) - 1] = temp[0], temp[2]
+            list2[len(list) - 1] = temp[1]
 
-        return list
+        return list, list2
 
     # Generate a Civilization using GET_DB_RANDOM and BUILD_RANDOM_LIST functions
     def GEN_CIV(self):
@@ -398,14 +383,17 @@ class Civilization:
         # Set lists using BUILD_RANDOM_LIST
         self.RACIAL_FEATURE_LIST = self.BUILD_RANDOM_LIST(
             table="RACIAL_FEATURE", total=4
-        )
-        self.PROFICIENCIES_LIST = self.BUILD_RANDOM_LIST(table="PROFICIENCIES", total=4)
+        )[0]
+        self.PROFICIENCIES_LIST = self.BUILD_RANDOM_LIST(
+            table="PROFICIENCIES", total=4
+        )[0]
         temp_SUBCLASSES_LIST = self.BUILD_RANDOM_LIST(table="CLASS_LIST", total=2)
+        print(f"\n\n{temp_SUBCLASSES_LIST}\n\n")
         # For better formatting, break up the returned Class/Subclass's
         SUBCLASSES_LIST = []
-        SUBCLASSES_LIST.append(temp_SUBCLASSES_LIST[0][0])
-        SUBCLASSES_LIST.append(temp_SUBCLASSES_LIST[0][1])
+        SUBCLASSES_LIST.append(temp_SUBCLASSES_LIST[0][0][0])
         SUBCLASSES_LIST.append(temp_SUBCLASSES_LIST[1][0])
+        SUBCLASSES_LIST.append(temp_SUBCLASSES_LIST[0][1][0])
         SUBCLASSES_LIST.append(temp_SUBCLASSES_LIST[1][1])
         self.SUBCLASSES_LIST = SUBCLASSES_LIST
 

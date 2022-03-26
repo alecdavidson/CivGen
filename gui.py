@@ -125,7 +125,11 @@ def generate():
 
     for i in range(len(civ.RACIAL_FEATURE_LIST)):
         output.insert(END, "\u25C6", "List")
-        output.insert(END, f" {civ.RACIAL_FEATURE_LIST[i]}", "List")
+        output.insert(
+            END,
+            f" {civ.RACIAL_FEATURE_LIST[i][0]} ({civ.RACIAL_FEATURE_LIST[i][1]})",
+            "List",
+        )
         output.insert(END, "\n")
 
     output.insert(END, "\n")
@@ -137,7 +141,11 @@ def generate():
 
     for i in range(len(civ.PROFICIENCIES_LIST)):
         output.insert(END, "\u25C6", "List")
-        output.insert(END, f" {civ.PROFICIENCIES_LIST[i]}", "List")
+        output.insert(
+            END,
+            f" {civ.PROFICIENCIES_LIST[i][0]} ({civ.PROFICIENCIES_LIST[i][1]})",
+            "List",
+        )
         output.insert(END, "\n")
 
     output.insert(END, "\n")
@@ -145,9 +153,9 @@ def generate():
     output.insert(END, "Adventurers who have found their start in ")
     output.insert(END, civ.CIV_NAME, "Entry")
     output.insert(END, " tend to become ")
-    output.insert(END, f"{civ.SUBCLASSES_LIST[0]}s ({civ.SUBCLASSES_LIST[1]})", "Entry")
+    output.insert(END, f"{civ.SUBCLASSES_LIST[0]} ({civ.SUBCLASSES_LIST[1]}s)", "Entry")
     output.insert(END, " or ")
-    output.insert(END, f"{civ.SUBCLASSES_LIST[2]}s ({civ.SUBCLASSES_LIST[3]})", "Entry")
+    output.insert(END, f"{civ.SUBCLASSES_LIST[2]} ({civ.SUBCLASSES_LIST[3]}s)", "Entry")
     output.insert(END, ")\n")
 
     output.insert(END, "_____________________________________________\n\n")
