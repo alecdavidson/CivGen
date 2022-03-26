@@ -388,7 +388,7 @@ class Civilization:
             table="PROFICIENCIES", total=4
         )[0]
         temp_SUBCLASSES_LIST = self.BUILD_RANDOM_LIST(table="CLASS_LIST", total=2)
-        print(f"\n\n{temp_SUBCLASSES_LIST}\n\n")
+
         # For better formatting, break up the returned Class/Subclass's
         SUBCLASSES_LIST = []
         SUBCLASSES_LIST.append(temp_SUBCLASSES_LIST[0][0][0])
