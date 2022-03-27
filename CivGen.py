@@ -303,17 +303,13 @@ class Civilization:
             f"Families that have lived here for generations tend to have one or more of the following features:"
         )
         for i in range(len(self.RACIAL_FEATURE_LIST)):
-            print(
-                f"\t* {self.RACIAL_FEATURE_LIST[i][0]} ({self.RACIAL_FEATURE_LIST[i][1]})"
-            )
+            print(f"\t* {self.RACIAL_FEATURE_LIST[i]}")
         print()
         print(
             f"Anyone who has spent a decent amount of time here, likely has honed one or more of the following skills:"
         )
         for i in range(len(self.PROFICIENCIES_LIST)):
-            print(
-                f"\t* {self.PROFICIENCIES_LIST[i][0]} ({self.PROFICIENCIES_LIST[i][1]})"
-            )
+            print(f"\t* {self.PROFICIENCIES_LIST[i]})")
         print()
         print(
             f"Adventurers who have found their start in {self.CIV_NAME} tend to become {self.SUBCLASSES_LIST[0]} ({self.SUBCLASSES_LIST[1]}s) or {self.SUBCLASSES_LIST[2]} ({self.SUBCLASSES_LIST[3]}s)"
@@ -380,17 +376,35 @@ class Civilization:
         self.ECONOMIC = self.GET_DB_RANDOM(table="ECONOMIC_LIST")
         self.RELIGION = self.GET_DB_RANDOM(table="RELIGION_LIST")
         self.MILITARY = self.GET_DB_RANDOM(table="MILITARY_LIST")
-        # Set lists using BUILD_RANDOM_LIST
-        self.RACIAL_FEATURE_LIST = self.BUILD_RANDOM_LIST(
+
+        # Set lists using BUILD_RANDOM_LIST and formating output
+        # Racial Features List
+        RACIAL_FEATURE_LIST = []
+        temp_RACIAL_FEATURE_LIST = self.BUILD_RANDOM_LIST(
             table="RACIAL_FEATURE", total=4
         )[0]
-        self.PROFICIENCIES_LIST = self.BUILD_RANDOM_LIST(
+
+        for i in range(len(temp_RACIAL_FEATURE_LIST)):
+            RACIAL_FEATURE_LIST.append(
+                f"{temp_RACIAL_FEATURE_LIST[i][0]} ({temp_RACIAL_FEATURE_LIST[i][1]})"
+            )
+        self.RACIAL_FEATURE_LIST = RACIAL_FEATURE_LIST
+
+        # Proficiencies List
+        PROFICIENCIES_LIST = []
+        temp_PROFICIENCIES_LIST = self.BUILD_RANDOM_LIST(
             table="PROFICIENCIES", total=4
         )[0]
-        temp_SUBCLASSES_LIST = self.BUILD_RANDOM_LIST(table="CLASS_LIST", total=2)
 
-        # For better formatting, break up the returned Class/Subclass's
+        for i in range(len(temp_RACIAL_FEATURE_LIST)):
+            PROFICIENCIES_LIST.append(
+                f"{temp_PROFICIENCIES_LIST[i][0]} ({temp_PROFICIENCIES_LIST[i][1]})"
+            )
+        self.PROFICIENCIES_LIST = PROFICIENCIES_LIST
+
+        # Subclasses List
         SUBCLASSES_LIST = []
+        temp_SUBCLASSES_LIST = self.BUILD_RANDOM_LIST(table="CLASS_LIST", total=2)
         SUBCLASSES_LIST.append(temp_SUBCLASSES_LIST[0][0][0])
         SUBCLASSES_LIST.append(temp_SUBCLASSES_LIST[1][0])
         SUBCLASSES_LIST.append(temp_SUBCLASSES_LIST[0][1][0])
@@ -584,6 +598,3 @@ if __name__ == "__main__":
                 civ.SAVE_DB()
             else:
                 civ.UPDATE_DB()
-
-
-# Listen I just like to have some extra space at the end and ATOM is being a real cheese about it

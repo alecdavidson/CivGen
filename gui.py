@@ -30,13 +30,14 @@ def read():
 # Save latest generated Civilization to civilizations.db
 def save():
     global civ
-    print(f"Saving {civ.CIV_NAME} of {civ.KINGDOM} (ID: {civ.id})")
+    new_id = civ.id
     if civ.id == -1:
-        civ.SAVE_DB()
+        new_id = civ.SAVE_DB()
     else:
         civ.UPDATE_DB()
 
-    output.insert(END, f"Saving {civ.CIV_NAME} of {civ.KINGDOM} (ID: {civ.id})")
+    print(f"Saved {civ.CIV_NAME} of {civ.KINGDOM} (ID: {new_id})")
+    output.insert(END, f"Saved {civ.CIV_NAME} of {civ.KINGDOM} (ID: {new_id})")
     output.insert(END, "\n_____________________________________________\n\n")
     output.see(END)
 
@@ -127,7 +128,7 @@ def generate():
         output.insert(END, "\u25C6", "List")
         output.insert(
             END,
-            f" {civ.RACIAL_FEATURE_LIST[i][0]} ({civ.RACIAL_FEATURE_LIST[i][1]})",
+            f" {civ.RACIAL_FEATURE_LIST[i]})",
             "List",
         )
         output.insert(END, "\n")
@@ -143,7 +144,7 @@ def generate():
         output.insert(END, "\u25C6", "List")
         output.insert(
             END,
-            f" {civ.PROFICIENCIES_LIST[i][0]} ({civ.PROFICIENCIES_LIST[i][1]})",
+            f" {civ.PROFICIENCIES_LIST[i]})",
             "List",
         )
         output.insert(END, "\n")
