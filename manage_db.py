@@ -1,5 +1,4 @@
 import csv, os, pandas as pd, re, shutil, sqlite3 as sl, sys
-from os.path import exists
 
 
 def Create_DB():
@@ -12,6 +11,8 @@ def Create_DB():
     civilizations_local = os.path.join(local_path, "civilizations.db")
 
     db_path = os.path.join(os.environ["APPDATA"], "CivGen")
+    if not os.path.exists(db_path):
+        os.mkdir(db_path)
     resources_path = os.path.join(db_path, "resources.db")
     civilizations_path = os.path.join(db_path, "civilizations.db")
 
