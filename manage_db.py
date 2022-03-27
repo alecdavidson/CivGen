@@ -16,8 +16,10 @@ def Create_DB():
     resources_path = os.path.join(db_path, "resources.db")
     civilizations_path = os.path.join(db_path, "civilizations.db")
 
-    shutil.copy2(resources_local, resources_path)
-    shutil.copy2(civilizations_local, civilizations_path)
+    if not os.path.exists(resources_path):
+        shutil.copy2(resources_local, resources_path)
+    if not os.path.exists(civilizations_path):
+        shutil.copy2(civilizations_local, civilizations_path)
 
     return 1
 

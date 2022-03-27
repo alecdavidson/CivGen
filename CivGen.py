@@ -7,14 +7,11 @@ from manage_db import Create_DB
 
 ## Global References
 # Connect to DBs
-dir_path = os.path.join(os.environ["APPDATA"], "CivGen")
+db_path = os.path.join(os.environ["APPDATA"], "CivGen")
 Create_DB()
 
-resources = os.path.join(dir_path, "resources.db")  # Static DB
-sl.connect(resources)
-
-civdb = os.path.join(dir_path, "civilizations.db")  # Dynamic DB
-sl.connect(civdb)
+resources = os.path.join(db_path, "resources.db")  # Static DB
+civdb = os.path.join(db_path, "civilizations.db")  # Dynamic DB
 
 resources = sl.connect(resources)  # Static DB
 civdb = sl.connect(civdb)  # Dynamic DB
@@ -201,6 +198,7 @@ class Civilization:
             )
             id = [i[0] for i in id][0]
 
+        civdb.commit()
         return id
 
     # If an existing entry was found, update that one instead of creating something new
@@ -279,6 +277,7 @@ class Civilization:
         with civdb:
             civdb.executemany(sql, data)
 
+        civdb.commit()
         return self.id
 
     # Organized Print out of the Civilization
