@@ -2,19 +2,18 @@
 CivGen by Alec Davidson
 """
 ## Import Modules
-import argparse, os, random, sqlite3 as sl, sys
-from manage_db import Create_DB
+import argparse, manage_db, os, random, sqlite3 as sl, sys
 
 ## Global References
 # Connect to DBs
 db_path = os.path.join(os.environ["APPDATA"], "CivGen")
-Create_DB()
+manage_db.Create_DB()
 
-resources = os.path.join(db_path, "resources.db")  # Static DB
-civdb = os.path.join(db_path, "civilizations.db")  # Dynamic DB
+resourcesdb = os.path.join(db_path, "resources.db")  # Static DB
+civdbdb = os.path.join(db_path, "civilizations.db")  # Dynamic DB
 
-resources = sl.connect(resources)  # Static DB
-civdb = sl.connect(civdb)  # Dynamic DB
+resources = sl.connect(resourcesdb)
+civdb = sl.connect(civdbdb)
 
 # Define Class
 class Civilization:
@@ -519,6 +518,26 @@ def READ_LIST(kingdom):
         civ_name_list.append(f"({i[0]}) {i[1]} in {i[2]}")
 
     return civ_name_list
+
+
+def Import_DB(db):
+    global civdb, resources
+    civdb.close()
+    resources.close()
+    manage_db.Import_DB(db)
+    civdb = sl.connect(civdbdb)
+    resources = sl.connect(resourcesdb)
+    return 1
+
+
+def Export_DB(db):
+    global civdb, resources
+    civdb.close()
+    resources.close()
+    manage_db.Export_DB(db)
+    civdb = sl.connect(civdbdb)
+    resources = sl.connect(resourcesdb)
+    return 1
 
 
 ## Execute

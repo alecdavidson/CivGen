@@ -80,7 +80,7 @@ def Import_DB(database, backup=True):
                             )
                         else:
                             col_string += f", {m} varchar(255) NOT NULL"
-                    # print(f"create table {table_name} ({col_string})")
+                    print(f"create table {table_name} ({col_string})")
                     cursor.execute(f"create table {table_name} ({col_string})")
                 else:
                     row = l.replace("\n", "").split("\t")
@@ -93,13 +93,15 @@ def Import_DB(database, backup=True):
                         else:
                             col_string += f", {m}"
                     for n in row:
-                        try:
+                        if row_string == "":
                             int(n)
                             row_string += n
-                        except:
+                        else:
                             n = n.replace("'", "`")
                             row_string += f", '{n}'"
-                    # print(f"insert into {table_name} ({col_string}) VALUES ({row_string})")
+                    print(
+                        f"insert into {table_name} ({col_string}) VALUES ({row_string})"
+                    )
                     cursor.execute(
                         f"insert into {table_name} ({col_string}) VALUES ({row_string})"
                     )
@@ -108,4 +110,4 @@ def Import_DB(database, backup=True):
 
 
 if __name__ == "__main__":
-    Create_DB()
+    pass

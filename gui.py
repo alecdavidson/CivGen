@@ -1,10 +1,12 @@
 ## Imports
-import manage_db, os, sys, tkinter as tk
+import CivGen, os, sys, tkinter as tk
+from CivGen import Civilization
+from CivGen import READ_LIST
+from functools import partial
 from tkinter import *
 from tkinter import scrolledtext
 from tkinter import ttk
-from CivGen import Civilization
-from CivGen import READ_LIST
+from tkinter import Menu
 
 ## Establish Functions and Variables
 civ = ""
@@ -169,27 +171,13 @@ def generate():
     return 1
 
 
-def imexport():
-    imex = Toplevel(gui)
-    imex.geometry("400x200")
-    imex["background"] = "#999999"
-    imex.title("Import/Export Databases")
+def dbimport(db):
+    CivGen.Import_DB(db)
+    return 1
 
-    leftframe = Frame(imex)
-    leftframe.pack(side="top", anchor=NW)
-    rightframe = Frame(imex)
-    rightframe.pack(side="top", anchor=NE)
 
-    exp_res_lbl = tk.Label(leftframe, text="", bg="#999999")
-    exp_res_btn = tk.Button(
-        leftframe,
-        relief=tk.RAISED,
-        text="Export Resources to CSV",
-        command=lambda: manage_db.Export_DB("resources.db"),
-    )
-    exp_res_lbl.pack(side="top")
-    exp_res_btn.pack(side="top")
-
+def dbexport(db):
+    CivGen.Export_DB(db)
     return 1
 
 
@@ -197,10 +185,30 @@ def imexport():
 if __name__ == "__main__":
     # Create gui and Label it
     gui = tk.Tk()
-    gui.title("5e Civilization Generator by Alec Davidson")
+    gui.title("Civilization Generator by Alec Davidson")
     gui.geometry("950x850")
     gui["background"] = "#999999"
     gui.iconbitmap(os.path.join(local_path, "d20.ico"))
+
+    # Create the Menubar
+    menubar = Menu(gui)
+    gui.config(menu=menubar)
+    imex_menu = Menu(menubar)
+    imex_menu.add_command(
+        label="Import Civilizations",
+        command=lambda: dbimport("civilizations.db"),
+    )
+    imex_menu.add_command(
+        label="Import Resources", command=lambda: dbimport("resources.db")
+    )
+    imex_menu.add_command(
+        label="Export Civilizations",
+        command=lambda: dbexport("civilizations.db"),
+    )
+    imex_menu.add_command(
+        label="Export Resources", command=lambda: dbexport("resources.db")
+    )
+    menubar.add_cascade(label="Import/Export", menu=imex_menu)
 
     # Create Frames
     topframe = Frame(gui)
@@ -320,9 +328,6 @@ if __name__ == "__main__":
     save = tk.Button(
         topframe, relief=tk.RAISED, text="Save Latest Civilization", command=save
     )
-    imex = tk.Button(
-        topframe, relief=tk.RAISED, text="Import/Export Databases", command=imexport
-    )
 
     # Pack Fields
     Title.pack(side="top")
@@ -357,7 +362,6 @@ if __name__ == "__main__":
     generate.pack(side="top")
     save.pack(side="top")
     read.pack(side="top")
-    imex.pack(side="top")
 
     outputlbl.pack(side="top")
     output.pack(side="top")
