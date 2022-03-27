@@ -1,5 +1,5 @@
 ## Imports
-import manage_db, tkinter as tk
+import manage_db, os, sys, tkinter as tk
 from tkinter import *
 from tkinter import scrolledtext
 from tkinter import ttk
@@ -8,6 +8,10 @@ from CivGen import READ_LIST
 
 ## Establish Functions and Variables
 civ = ""
+try:
+    local_path = sys._MEIPASS
+except:
+    local_path = os.path.abspath(".")
 
 # Read entries from civilizations.db
 def read():
@@ -196,7 +200,7 @@ if __name__ == "__main__":
     gui.title("5e Civilization Generator by Alec Davidson")
     gui.geometry("950x850")
     gui["background"] = "#999999"
-    gui.iconbitmap("d20.ico")
+    gui.iconbitmap(os.path.join(local_path, "d20.ico"))
 
     # Create Frames
     topframe = Frame(gui)

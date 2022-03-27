@@ -1,10 +1,15 @@
-import csv, os, pandas as pd, re, shutil, sqlite3 as sl
+import csv, os, pandas as pd, re, shutil, sqlite3 as sl, sys
 from os.path import exists
 
 
 def Create_DB():
-    resources_local = os.path.join(os.getcwd(), "resources.db")
-    civilizations_local = os.path.join(os.getcwd(), "civilizations.db")
+    try:
+        local_path = sys._MEIPASS
+    except:
+        local_path = os.path.abspath(".")
+
+    resources_local = os.path.join(local_path, "resources.db")
+    civilizations_local = os.path.join(local_path, "civilizations.db")
 
     db_path = os.path.join(os.environ["APPDATA"], "CivGen")
     resources_path = os.path.join(db_path, "resources.db")
@@ -12,6 +17,8 @@ def Create_DB():
 
     shutil.copy2(resources_local, resources_path)
     shutil.copy2(civilizations_local, civilizations_path)
+
+    return 1
 
 
 def Export_DB(database):

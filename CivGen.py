@@ -402,7 +402,7 @@ class Civilization:
             )
         self.PROFICIENCIES_LIST = PROFICIENCIES_LIST
 
-        # Subclasses List
+        # Subcka
         SUBCLASSES_LIST = []
         temp_SUBCLASSES_LIST = self.BUILD_RANDOM_LIST(table="CLASS_LIST", total=2)
         SUBCLASSES_LIST.append(temp_SUBCLASSES_LIST[0][0][0])
