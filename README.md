@@ -1,9 +1,10 @@
-# 5e Civilization Generator V0.1
+# 5e Civilization Generator V0.2
 Generate details for a fictional civilizations using the Kingdom and Civilization name as a random seed.
 This is a fun project and is NOT affiliated with Wizards of the Coast.
 
 ## To Do:
 * Improve README
+* Add content to INSTRUCTIONS
 * Add Mac OSX and Linux compatibility
 
 ### To Run:
