@@ -171,20 +171,52 @@ def generate():
     return 1
 
 
+# Convert CSVs to DB
 def dbimport(db):
     CivGen.Import_DB(db)
     return 1
 
 
+# Export DB content into CSVs
 def dbexport(db):
     CivGen.Export_DB(db)
+    return 1
+
+
+# Create a new window with information
+def about(about_type):
+    # Create new Window
+    about_window = Tk()
+    about_window.title("Civilization Generator by Alec Davidson")
+    about_window.geometry("750x650")
+    about_window["background"] = "#999999"
+    about_window.iconbitmap(os.path.join(local_path, "d20.ico"))
+
+    # Open file
+    data = ""
+    if about_type == "readme":
+        aboutf = open(os.path.join(local_path, "README.md"), "r")
+        for i in aboutf:
+            data += i
+    elif about_type == "how":
+        aboutf = open(os.path.join(local_path, "INSTRUCTIONS.md"), "r")
+        for i in aboutf:
+            data += i
+    else:
+        pass
+
+    # pack textbox with text
+    textbox = Text(about_window)
+    textbox.insert(END, data)
+    textbox.pack(expand=True, fill=BOTH)
+
     return 1
 
 
 ## Execute
 if __name__ == "__main__":
     # Create gui and Label it
-    gui = tk.Tk()
+    gui = Tk()
     gui.title("Civilization Generator by Alec Davidson")
     gui.geometry("950x850")
     gui["background"] = "#999999"
@@ -193,22 +225,32 @@ if __name__ == "__main__":
     # Create the Menubar
     menubar = Menu(gui)
     gui.config(menu=menubar)
-    imex_menu = Menu(menubar)
-    imex_menu.add_command(
+    # Import and Export
+    imex_menu = Menu(menubar, tearoff=False)
+    ex_menu = Menu(menubar, tearoff=False)
+    im_menu = Menu(menubar, tearoff=False)
+    menubar.add_cascade(label="Import/Export", menu=imex_menu)
+    imex_menu.add_cascade(label="Export", menu=ex_menu)
+    imex_menu.add_cascade(label="Import", menu=im_menu)
+    im_menu.add_command(
         label="Import Civilizations",
         command=lambda: dbimport("civilizations.db"),
     )
-    imex_menu.add_command(
+    im_menu.add_command(
         label="Import Resources", command=lambda: dbimport("resources.db")
     )
-    imex_menu.add_command(
+    ex_menu.add_command(
         label="Export Civilizations",
         command=lambda: dbexport("civilizations.db"),
     )
-    imex_menu.add_command(
+    ex_menu.add_command(
         label="Export Resources", command=lambda: dbexport("resources.db")
     )
-    menubar.add_cascade(label="Import/Export", menu=imex_menu)
+    # About CivGen
+    about_menu = Menu(menubar, tearoff=False)
+    menubar.add_cascade(label="About", menu=about_menu)
+    about_menu.add_command(label="How to use", command=lambda: about("how"))
+    about_menu.add_command(label="About CivGen", command=lambda: about("readme"))
 
     # Create Frames
     topframe = Frame(gui)
@@ -224,7 +266,7 @@ if __name__ == "__main__":
     # Create Title and Output
     Title = tk.Label(
         topframe,
-        text="5e Civilization Generator",
+        text="Civilization Generator",
         bg="#999999",
         font=("Calibri 18 bold underline"),
     )

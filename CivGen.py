@@ -5,7 +5,7 @@ CivGen by Alec Davidson
 import argparse, manage_db, os, random, sqlite3 as sl, sys
 
 ## Global References
-# Connect to DBs
+# Ensure DB files exist and connect
 db_path = os.path.join(os.environ["APPDATA"], "CivGen")
 manage_db.Create_DB()
 
@@ -520,6 +520,9 @@ def READ_LIST(kingdom):
     return civ_name_list
 
 
+# In order to use the Import and Export functions from manage_db in the executable
+# I need to be able to close the connection to the DB while inserting
+# So I created shell programs that close the connection while calling manage_db, and then reconnect to db
 def Import_DB(db):
     global civdb, resources
     civdb.close()
@@ -530,6 +533,7 @@ def Import_DB(db):
     return 1
 
 
+# Export follows the same as above for consistancy
 def Export_DB(db):
     global civdb, resources
     civdb.close()
