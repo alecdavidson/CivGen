@@ -310,7 +310,7 @@ class Civilization:
             print(f"\t* {self.PROFICIENCIES_LIST[i]})")
         print()
         print(
-            f"Adventurers who have found their start in {self.CIV_NAME} tend to become {self.SUBCLASSES_LIST[0]} ({self.SUBCLASSES_LIST[1]}s) or {self.SUBCLASSES_LIST[2]} ({self.SUBCLASSES_LIST[3]}s)"
+            f"Adventurers who have found their start in {self.CIV_NAME} tend to become {self.SUBCLASSES_LIST[1]}s ({self.SUBCLASSES_LIST[0]}) or {self.SUBCLASSES_LIST[3]}s ({self.SUBCLASSES_LIST[2]})"
         )
 
         return 1

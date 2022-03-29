@@ -10,6 +10,7 @@ from tkinter import Menu
 
 ## Establish Functions and Variables
 civ = ""
+added_input = False
 try:
     local_path = sys._MEIPASS
 except:
@@ -134,7 +135,7 @@ def generate():
         output.insert(END, "\u25C6", "List")
         output.insert(
             END,
-            f" {civ.RACIAL_FEATURE_LIST[i]})",
+            f" {civ.RACIAL_FEATURE_LIST[i]}",
             "List",
         )
         output.insert(END, "\n")
@@ -150,7 +151,7 @@ def generate():
         output.insert(END, "\u25C6", "List")
         output.insert(
             END,
-            f" {civ.PROFICIENCIES_LIST[i]})",
+            f" {civ.PROFICIENCIES_LIST[i]}",
             "List",
         )
         output.insert(END, "\n")
@@ -160,10 +161,10 @@ def generate():
     output.insert(END, "Adventurers who have found their start in ")
     output.insert(END, civ.CIV_NAME, "Entry")
     output.insert(END, " tend to become ")
-    output.insert(END, f"{civ.SUBCLASSES_LIST[0]} ({civ.SUBCLASSES_LIST[1]}s)", "Entry")
+    output.insert(END, f"{civ.SUBCLASSES_LIST[1]}s ({civ.SUBCLASSES_LIST[0]})", "Entry")
     output.insert(END, " or ")
-    output.insert(END, f"{civ.SUBCLASSES_LIST[2]} ({civ.SUBCLASSES_LIST[3]}s)", "Entry")
-    output.insert(END, ")\n")
+    output.insert(END, f"{civ.SUBCLASSES_LIST[3]}s ({civ.SUBCLASSES_LIST[2]})", "Entry")
+    output.insert(END, "\n")
 
     output.insert(END, "_____________________________________________\n\n")
     output.see(END)
@@ -222,6 +223,59 @@ def about(about_type):
     return 1
 
 
+# Allow for User input for other details
+def add_input():
+    global added_input
+
+    if added_input == False:
+        community_sizelbl.pack(anchor="w", padx=25)
+        community_size.pack(anchor="w", padx=25, fill=BOTH)
+        spermlbl.pack(anchor="w", padx=25)
+        sperm.pack(anchor="w", padx=25, fill=BOTH)
+        sociallbl.pack(anchor="w", padx=25)
+        social.pack(anchor="w", padx=25, fill=BOTH)
+        politicallbl.pack(anchor="w", padx=25)
+        political.pack(anchor="w", padx=25, fill=BOTH)
+        economiclbl.pack(anchor="w", padx=25)
+        economic.pack(anchor="w", padx=25, fill=BOTH)
+        religionlbl.pack(anchor="w", padx=25)
+        religion.pack(anchor="w", padx=25, fill=BOTH)
+        militarylbl.pack(anchor="w", padx=25)
+        military.pack(anchor="w", padx=25, fill=BOTH)
+
+        racial_feature_listlbl.pack(anchor="w", padx=25)
+        racial_feature_list.pack(anchor="w", padx=25, fill=BOTH)
+        proficiencies_listlbl.pack(anchor="w", padx=25)
+        proficiencies_list.pack(anchor="w", padx=25, fill=BOTH)
+        subclasses_listlbl.pack(anchor="w", padx=25)
+        subclasses_list.pack(anchor="w", padx=25, fill=BOTH)
+        added_input = True
+    else:
+        community_sizelbl.pack_forget()
+        community_size.pack_forget()
+        spermlbl.pack_forget()
+        sperm.pack_forget()
+        sociallbl.pack_forget()
+        social.pack_forget()
+        politicallbl.pack_forget()
+        political.pack_forget()
+        economiclbl.pack_forget()
+        economic.pack_forget()
+        religionlbl.pack_forget()
+        religion.pack_forget()
+        militarylbl.pack_forget()
+        military.pack_forget()
+
+        racial_feature_listlbl.pack_forget()
+        racial_feature_list.pack_forget()
+        proficiencies_listlbl.pack_forget()
+        proficiencies_list.pack_forget()
+        subclasses_listlbl.pack_forget()
+        subclasses_list.pack_forget()
+        added_input = False
+    return 1
+
+
 ## Execute
 if __name__ == "__main__":
     # Create gui and Label it
@@ -271,26 +325,31 @@ if __name__ == "__main__":
     about_menu.add_command(label="About CivGen", command=lambda: about("readme"))
 
     # Create Frames
-    topframe = Frame(gui)
-    topframe.pack(side="left", anchor=NW)
-    topframe["background"] = "#999999"
-    midframe = Frame(gui)
-    midframe.pack(side="top")
-    midframe["background"] = "#999999"
-    botframe = Frame(gui)
-    botframe.pack(side="left", anchor=NE)
-    botframe["background"] = "#999999"
+    leftframe = Frame(
+        gui,
+        width=400,
+        height=900,
+    )
+    leftframe.pack(side="left", anchor=NW)
+    leftframe["background"] = "#999999"
+    rightframe = Frame(
+        gui,
+        width=400,
+        height=900,
+    )
+    rightframe.pack(side="right", anchor=NE)
+    rightframe["background"] = "#999999"
 
     # Create Title and Output
     Title = tk.Label(
-        topframe,
+        leftframe,
         text="Civilization Generator",
         bg="#999999",
         font=("Calibri 18 bold underline"),
     )
-    outputlbl = tk.Label(botframe, text="Results:", bg="#999999")
+    outputlbl = tk.Label(rightframe, text="Results:", bg="#999999")
     output = scrolledtext.ScrolledText(
-        botframe,
+        rightframe,
         wrap=tk.WORD,
         width=450,
         height=700,
@@ -310,121 +369,102 @@ if __name__ == "__main__":
 
     # Create User Input Fields and Global Variables
     kingdomlbl = tk.Label(
-        topframe, text="What is the name of your Kingdom?", bg="#999999"
+        leftframe, text="What is the name of your Kingdom?", bg="#999999"
     )
-    kingdom = tk.Entry(topframe, relief=tk.SUNKEN)
+    kingdom = tk.Entry(leftframe, relief=tk.SUNKEN)
     kingdom.insert(0, "Kingdom")
     civ_namelbl = tk.Label(
-        topframe, text="What is the name of your Civilization?", bg="#999999"
+        leftframe, text="What is the name of your Civilization?", bg="#999999"
     )
-    civ_name = tk.Entry(topframe, relief=tk.SUNKEN)
+    civ_name = tk.Entry(leftframe, relief=tk.SUNKEN)
     civ_name.insert(0, "Civ")
 
     community_sizelbl = tk.Label(
-        topframe,
+        leftframe,
         text="How would you describe the Size of your Civilization?",
         bg="#999999",
     )
-    community_size = tk.Entry(topframe, relief=tk.SUNKEN)
+    community_size = tk.Entry(leftframe, relief=tk.SUNKEN)
     spermlbl = tk.Label(
-        topframe, text="What is the main Focus of your Civilization?", bg="#999999"
+        leftframe, text="What is the main Focus of your Civilization?", bg="#999999"
     )
-    sperm = tk.Entry(topframe, relief=tk.SUNKEN)
+    sperm = tk.Entry(leftframe, relief=tk.SUNKEN)
 
     sociallbl = tk.Label(
-        topframe,
+        leftframe,
         text="What is the key Social aspect of your Civilization?",
         bg="#999999",
     )
-    social = tk.Entry(topframe, relief=tk.SUNKEN)
+    social = tk.Entry(leftframe, relief=tk.SUNKEN)
     politicallbl = tk.Label(
-        topframe,
+        leftframe,
         text="What is the Policial structure of your Civilization?",
         bg="#999999",
     )
-    political = tk.Entry(topframe, relief=tk.SUNKEN)
+    political = tk.Entry(leftframe, relief=tk.SUNKEN)
     economiclbl = tk.Label(
-        topframe, text="What is the primary Export of your Civilization?", bg="#999999"
+        leftframe, text="What is the primary Export of your Civilization?", bg="#999999"
     )
-    economic = tk.Entry(topframe, relief=tk.SUNKEN)
+    economic = tk.Entry(leftframe, relief=tk.SUNKEN)
     religionlbl = tk.Label(
-        topframe,
+        leftframe,
         text="What is the nature of your Civilizations Religion?",
         bg="#999999",
     )
-    religion = tk.Entry(topframe, relief=tk.SUNKEN)
+    religion = tk.Entry(leftframe, relief=tk.SUNKEN)
     militarylbl = tk.Label(
-        topframe, text="What enforces the law in your Civilization?", bg="#999999"
+        leftframe, text="What enforces the law in your Civilization?", bg="#999999"
     )
-    military = tk.Entry(topframe, relief=tk.SUNKEN)
+    military = tk.Entry(leftframe, relief=tk.SUNKEN)
 
     racial_feature_listlbl = tk.Label(
-        topframe,
+        leftframe,
         text="What are some features of the families in your Civilization? (Limit 4)",
         bg="#999999",
     )
-    racial_feature_list = tk.Text(topframe, width=40, height=4, relief=tk.SUNKEN)
+    racial_feature_list = tk.Text(leftframe, width=40, height=4, relief=tk.SUNKEN)
     proficiencies_listlbl = tk.Label(
-        topframe,
+        leftframe,
         text="What are some skills honed by the people of your Civilization? (Limit 4)",
         bg="#999999",
     )
-    proficiencies_list = tk.Text(topframe, width=40, height=4, relief=tk.SUNKEN)
+    proficiencies_list = tk.Text(leftframe, width=40, height=4, relief=tk.SUNKEN)
     subclasses_listlbl = tk.Label(
-        topframe,
+        leftframe,
         text="What type of Adventurer got their start in your Civilization?\n(Limit 2, alternate lines for 'Class' and 'Subclass')",
         bg="#999999",
+        justify=LEFT,
     )
-    subclasses_list = tk.Text(topframe, width=40, height=4, relief=tk.SUNKEN)
+    subclasses_list = tk.Text(leftframe, width=40, height=4, relief=tk.SUNKEN)
 
     # Create Buttons
-    space = tk.Label(topframe, text="", bg="#999999")
     generate = tk.Button(
-        topframe, relief=tk.RAISED, text="Generate Civilization", command=generate
+        leftframe, relief=tk.RAISED, text="Generate Civilization", command=generate
     )
     read = tk.Button(
-        topframe, relief=tk.RAISED, text="Print Saved Civilizations", command=read
+        leftframe, relief=tk.RAISED, text="Print Saved Civilizations", command=read
     )
     save = tk.Button(
-        topframe, relief=tk.RAISED, text="Save Latest Civilization", command=save
+        leftframe, relief=tk.RAISED, text="Save Latest Civilization", command=save
+    )
+    add_inputbtn = tk.Button(
+        leftframe, relief=tk.RAISED, text="Manually Enter Details", command=add_input
     )
 
     # Pack Fields
-    Title.pack(side="top")
-    kingdomlbl.pack(side="top")
-    kingdom.pack(side="top")
-    civ_namelbl.pack(side="top")
-    civ_name.pack(side="top")
+    Title.pack()
+    kingdomlbl.pack(anchor="w", padx=25)
+    kingdom.pack(anchor="w", padx=25, fill=BOTH)
+    civ_namelbl.pack(anchor="w", padx=25)
+    civ_name.pack(anchor="w", padx=25, fill=BOTH)
 
-    community_sizelbl.pack(side="top")
-    community_size.pack(side="top")
-    spermlbl.pack(side="top")
-    sperm.pack(side="top")
-    sociallbl.pack(side="top")
-    social.pack(side="top")
-    politicallbl.pack(side="top")
-    political.pack(side="top")
-    economiclbl.pack(side="top")
-    economic.pack(side="top")
-    religionlbl.pack(side="top")
-    religion.pack(side="top")
-    militarylbl.pack(side="top")
-    military.pack(side="top")
+    generate.pack(fill=BOTH, pady=(5, 0), padx=70)
+    save.pack(fill=BOTH, padx=70)
+    read.pack(fill=BOTH, padx=70)
+    add_inputbtn.pack(fill=BOTH, padx=70, pady=5)
 
-    racial_feature_listlbl.pack(side="top")
-    racial_feature_list.pack(side="top")
-    proficiencies_listlbl.pack(side="top")
-    proficiencies_list.pack(side="top")
-    subclasses_listlbl.pack(side="top")
-    subclasses_list.pack(side="top")
-
-    space.pack(side="top")
-    generate.pack(side="top")
-    save.pack(side="top")
-    read.pack(side="top")
-
-    outputlbl.pack(side="top")
-    output.pack(side="top")
+    outputlbl.pack()
+    output.pack(padx=(0, 10), pady=(0, 10))
 
     # Open gui
     print("You can minimize this window, but do not close!")
