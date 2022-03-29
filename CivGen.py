@@ -544,6 +544,17 @@ def Export_DB(db):
     return result
 
 
+# Export follows the same as above for consistancy
+def dbrollback(db):
+    global civdb, resources
+    civdb.close()
+    resources.close()
+    result = manage_db.dbrollback(db)
+    civdb = sl.connect(civdbdb)
+    resources = sl.connect(resourcesdb)
+    return result
+
+
 ## Execute
 if __name__ == "__main__":
     # Parse the CLI for manually entered entities

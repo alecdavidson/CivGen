@@ -185,6 +185,13 @@ def dbexport(db):
     return 1
 
 
+# Rollback DB to previous version
+def dbrollback(db):
+    result = CivGen.dbrollback(db)
+    output.insert(END, f"\n-- {result} --\n")
+    return 1
+
+
 # Create a new window with information
 def about(about_type):
     # Create new Window
@@ -241,6 +248,14 @@ if __name__ == "__main__":
     im_menu.add_command(
         label="Import Resources", command=lambda: dbimport("resources.db")
     )
+    im_menu.add_command(
+        label="Rollback Civilizations",
+        command=lambda: dbrollback("civilizations.db"),
+    )
+    im_menu.add_command(
+        label="Rollback Resources",
+        command=lambda: dbrollback("Resources.db"),
+    )
     ex_menu.add_command(
         label="Export Civilizations",
         command=lambda: dbexport("civilizations.db"),
@@ -248,6 +263,7 @@ if __name__ == "__main__":
     ex_menu.add_command(
         label="Export Resources", command=lambda: dbexport("resources.db")
     )
+
     # About CivGen
     about_menu = Menu(menubar, tearoff=False)
     menubar.add_cascade(label="About", menu=about_menu)

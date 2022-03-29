@@ -136,5 +136,21 @@ def Import_DB(database, backup=True):
     return "Import Complete."
 
 
+# Rollback DB by deleting active database and renaming backup file
+def dbrollback(database):
+    # Establish path to database files
+    dir_path = os.path.join(os.environ["APPDATA"], "CivGen")
+    db_path = os.path.join(dir_path, database)
+    bak_path = db_path + ".bak"
+    # Check that a backup exists before deleting
+    if not os.path.exists(bak_path):
+        return "No backup file found."
+    # Delete current DB and rename Backup
+    os.remove(db_path)
+    shutil.copy2(bak_path, db_path)
+
+    return f"{database} rolledback to previous saved version."
+
+
 if __name__ == "__main__":
     pass
