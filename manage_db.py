@@ -40,8 +40,9 @@ def Export_DB(database):
     db_path = os.path.join(dir_path, database)
     # Check for a local folder named after the database, create it if missing
     path_exists = os.path.exists(os.path.join(dir_path, database.replace(".db", "")))
+    local_path = os.path.join(os.getcwd(), database.replace(".db", ""))
     try:
-        os.mkdir(f"{os.getcwd()}\{database.replace('.db','')}")
+        os.mkdir(local_path)
     except:
         pass
 
@@ -59,7 +60,7 @@ def Export_DB(database):
     # Close connection
     conn.close()
 
-    return 1
+    return f"Exported {database} to {local_path}"
 
 
 # Backup current DB, delete it, and Convert CSVs to a new DB
@@ -67,13 +68,17 @@ def Import_DB(database, backup=True):
     # Establish path to database files
     dir_path = os.path.join(os.environ["APPDATA"], "CivGen")
     db_path = os.path.join(dir_path, database)
+    # Establish path to local directory
+    csv_path = os.path.join(os.getcwd(), database.replace(".db", ""))
+    # Check if there are files to import
+    if not os.path.exists(csv_path):
+        return "Local Files Not Found."
     # Backup current DB by creating a duplicate with .bak extension
     if backup == True:
         shutil.copy2(db_path, f"{db_path}.bak")
     # Delete current db file
     os.remove(db_path)
-    # Establish path to local directory
-    csv_path = os.path.join(os.getcwd(), database.replace(".db", ""))
+    # Connect to Database
     conn = sl.connect(db_path, isolation_level=None, detect_types=sl.PARSE_COLNAMES)
     cursor = conn.cursor()
 
@@ -128,7 +133,7 @@ def Import_DB(database, backup=True):
                         f"insert into {table_name} ({col_string}) VALUES ({row_string})"
                     )
                 count += 1
-    return 1
+    return "Import Complete."
 
 
 if __name__ == "__main__":

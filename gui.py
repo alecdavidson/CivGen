@@ -173,13 +173,15 @@ def generate():
 
 # Convert CSVs to DB
 def dbimport(db):
-    CivGen.Import_DB(db)
+    result = CivGen.Import_DB(db)
+    output.insert(END, f"\n-- {result} --\n")
     return 1
 
 
 # Export DB content into CSVs
 def dbexport(db):
-    CivGen.Export_DB(db)
+    result = CivGen.Export_DB(db)
+    output.insert(END, f"\n-- {result} --\n")
     return 1
 
 
