@@ -1,12 +1,10 @@
 ## Imports
 import CivGen, os, sys, tkinter as tk
-from CivGen import Civilization
-from CivGen import READ_LIST
+from CivGen import Civilization, READ_LIST
 from functools import partial
 from tkinter import *
-from tkinter import scrolledtext
-from tkinter import ttk
-from tkinter import Menu
+from tkinter import Canvas, Menu, scrolledtext, ttk
+from PIL import Image, ImageTk
 
 ## Establish Functions and Variables
 civ = ""
@@ -249,6 +247,9 @@ def add_input():
         proficiencies_list.pack(anchor="w", padx=25, fill=BOTH)
         subclasses_listlbl.pack(anchor="w", padx=25)
         subclasses_list.pack(anchor="w", padx=25, fill=BOTH)
+
+        d20canvas.pack_forget()
+
         added_input = True
     else:
         community_sizelbl.pack_forget()
@@ -272,6 +273,9 @@ def add_input():
         proficiencies_list.pack_forget()
         subclasses_listlbl.pack_forget()
         subclasses_list.pack_forget()
+
+        d20canvas.pack(fill=BOTH, expand=True)
+
         added_input = False
     return 1
 
@@ -327,7 +331,7 @@ if __name__ == "__main__":
     # Create Frames
     leftframe = Frame(
         gui,
-        width=400,
+        width=450,
         height=900,
     )
     leftframe.pack(side="left", anchor=NW)
@@ -368,6 +372,13 @@ if __name__ == "__main__":
         lmargin2="15m",
         tabs=["15m"],
     )
+
+    # Add d20 image
+    d20image = Image.open(os.path.join(local_path, "d20.png")).convert("RGBA")
+    d20pic = ImageTk.PhotoImage(d20image)
+    d20canvas = Canvas(leftframe, bg="#999999", highlightthickness=0)
+    d20canvas.create_image(200, 400, image=d20pic)
+    # d20lbl = Label(leftframe, image=d20pic)
 
     # Create User Input Fields and Global Variables
     kingdomlbl = tk.Label(
@@ -460,10 +471,12 @@ if __name__ == "__main__":
     civ_namelbl.pack(anchor="w", padx=25)
     civ_name.pack(anchor="w", padx=25, fill=BOTH)
 
-    generate.pack(fill=BOTH, pady=(5, 0), padx=70)
-    save.pack(fill=BOTH, padx=70)
-    read.pack(fill=BOTH, padx=70)
-    add_inputbtn.pack(fill=BOTH, padx=70, pady=5)
+    generate.pack(fill=BOTH, pady=(5, 2), padx=70)
+    save.pack(fill=BOTH, padx=70, pady=2)
+    read.pack(fill=BOTH, padx=70, pady=2)
+    add_inputbtn.pack(fill=BOTH, padx=70, pady=2)
+
+    d20canvas.pack(fill=BOTH, expand=True)
 
     outputlbl.pack()
     output.pack(padx=(0, 10), pady=(0, 10))
