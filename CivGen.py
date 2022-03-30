@@ -310,7 +310,7 @@ class Civilization:
             print(f"\t* {self.PROFICIENCIES_LIST[i]})")
         print()
         print(
-            f"Adventurers who have found their start in {self.CIV_NAME} tend to become {self.SUBCLASSES_LIST[0]} ({self.SUBCLASSES_LIST[1]}s) or {self.SUBCLASSES_LIST[2]} ({self.SUBCLASSES_LIST[3]}s)"
+            f"Adventurers who have found their start in {self.CIV_NAME} tend to become {self.SUBCLASSES_LIST[1]}s ({self.SUBCLASSES_LIST[0]}) or {self.SUBCLASSES_LIST[3]}s ({self.SUBCLASSES_LIST[2]})"
         )
 
         return 1
@@ -527,10 +527,10 @@ def Import_DB(db):
     global civdb, resources
     civdb.close()
     resources.close()
-    manage_db.Import_DB(db)
+    result = manage_db.Import_DB(db)
     civdb = sl.connect(civdbdb)
     resources = sl.connect(resourcesdb)
-    return 1
+    return result
 
 
 # Export follows the same as above for consistancy
@@ -538,10 +538,21 @@ def Export_DB(db):
     global civdb, resources
     civdb.close()
     resources.close()
-    manage_db.Export_DB(db)
+    result = manage_db.Export_DB(db)
     civdb = sl.connect(civdbdb)
     resources = sl.connect(resourcesdb)
-    return 1
+    return result
+
+
+# Export follows the same as above for consistancy
+def dbrollback(db):
+    global civdb, resources
+    civdb.close()
+    resources.close()
+    result = manage_db.dbrollback(db)
+    civdb = sl.connect(civdbdb)
+    resources = sl.connect(resourcesdb)
+    return result
 
 
 ## Execute
