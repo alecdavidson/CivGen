@@ -331,13 +331,15 @@ if __name__ == "__main__":
         height=900,
     )
     leftframe.pack(side="left", anchor=NW)
+    leftframe.pack_propagate(0)
     leftframe["background"] = "#999999"
     rightframe = Frame(
         gui,
-        width=400,
+        width=500,
         height=900,
     )
     rightframe.pack(side="right", anchor=NE)
+    rightframe.pack_propagate(0)
     rightframe["background"] = "#999999"
 
     # Create Title and Output
