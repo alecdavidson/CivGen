@@ -4,7 +4,7 @@
 block_cipher = None
 
 
-a = Analysis(['run.py'],
+a = Analysis(['gui.py'],
              pathex=[],
              binaries=[],
              datas=[('civilizations.db', '.'), ('resources.db', '.'), ('d20.ico','.'), ('d20.png','.'), ('README.md','.'), ('INSTRUCTIONS.md','.')],
