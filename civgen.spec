@@ -46,4 +46,4 @@ exe = EXE(pyz,
     target_arch=None,
     codesign_identity='AlecDavidson',
     entitlements_file=None,
-    icon='d20.ico' )
+    icon='d20.ico')
