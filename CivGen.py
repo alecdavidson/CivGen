@@ -18,46 +18,43 @@ civdb = sl.connect(civdbdb)
 
 class Civilization:
     """
-        A Class to represent a Civilization
+    A Class to represent a Civilization
 
-        ...
+    ...
 
-        Attributes
-        ----------
-        id : int
-                The id used to reference the Civilization in civilizations.db
-        CIV_NAME : str
-                The name of the Civilization (Mandatory Value)
-        KINGDOM : str
-                The name of the Kingdom that the Civilization resides in (Mandatory Value)
-        COMMUNITY_SIZE : str
-                The size or scale of the Civilization
-        SPERM : str
-                The main focus of the Civilization
-        POLITICAL : str
-                The Political Structure of the Civilization
-        ECONOMIC : str
-                The main Economic export of the Civilization
-        MILITARY : str
-                The type of Military the Civilization uses for protection
-        SOCIAL : str
-                The Social center of the Civilization
-        RELIGION : str
-                The primary Religious belief of the Civilization
-        RACIAL_FEATURE_LIST : list
-                A list of Features common in the races that live in the Civilization
-        PROFICIENCIES_LIST : list
-                A list of Proficiencies commonly found by anyone that lives in the Civilization
-        SUBCLASSES_LIST : list
-                A list of Classes/Subclasses that indiviuals of the Civilization may take
+    Attributes
+    ----------
+    id : int
+            The id used to reference the Civilization in civilizations.db
+    CIV_NAME : str
+            The name of the Civilization (Mandatory Value)
+    KINGDOM : str
+            The name of the Kingdom that the Civilization resides in (Mandatory Value)
+    COMMUNITY_SIZE : str
+            The size or scale of the Civilization
+    SPERM : str
+            The main focus of the Civilization
+    POLITICAL : str
+            The Political Structure of the Civilization
+    ECONOMIC : str
+            The main Economic export of the Civilization
+    MILITARY : str
+            The type of Military the Civilization uses for protection
+    SOCIAL : str
+            The Social center of the Civilization
+    RELIGION : str
+            The primary Religious belief of the Civilization
+    RACIAL_FEATURE_LIST : list
+            A list of Features common in the races that live in the Civilization
+    PROFICIENCIES_LIST : list
+            A list of Proficiencies commonly found by anyone that lives in the Civilization
+    SUBCLASSES_LIST : list
+            A list of Classes/Subclasses that indiviuals of the Civilization may take
 
-        Methods
-        -------
-        info(additional=""):
-                Prints the person's name and age.
-
-        READ_DB():
-                Queries the DB for an entry in civilizations.db and returns the self.id.
+    Methods
+    -------
+    READ_DB():
+            Queries the DB for an entry in civilizations.db and returns the self.id.
     SAVE_DB():
                 Save Civilization to the civilizations.db and return the id.
     UPDATE_DB():
