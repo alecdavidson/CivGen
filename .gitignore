@@ -2,7 +2,6 @@
 Include/
 Lib/
 Scripts/
-dist/
 build/*
 resources/*
 civilizations/*
