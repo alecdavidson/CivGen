@@ -1,24 +1,27 @@
 ## Imports
 import CivGen, os, sys, tkinter as tk
+import ctypes
 from CivGen import Civilization, READ_LIST
 from functools import partial
 from tkinter import *
 from tkinter import Canvas, Menu, scrolledtext, ttk
 from PIL import Image, ImageTk
-import pyi_splash
 
-# Update the text on the splash screen
-pyi_splash.update_text("PyInstaller is a great software!")
-pyi_splash.update_text("Second time's a charm!")
+# Auto Scaling
+ctypes.windll.shcore.SetProcessDpiAwareness(1)
 
-# Close the splash screen. It does not matter when the call
-# to this function is made, the splash screen remains open until
-# this function is called or the Python program is terminated.
-pyi_splash.close()
+# Close Splash Screen
+try:
+    import pyi_splash
+
+    pyi_splash.close()
+except:
+    pass
 
 ## Establish Functions and Variables
 civ = ""
 added_input = False
+
 try:
     local_path = sys._MEIPASS
 except:
@@ -237,30 +240,35 @@ def add_input():
 
     if added_input == False:
         community_sizelbl.pack(anchor="w", padx=25)
-        community_size.pack(anchor="w", padx=25, fill=BOTH)
+        community_size.pack(anchor="w", padx=25, fill=X)
         spermlbl.pack(anchor="w", padx=25)
-        sperm.pack(anchor="w", padx=25, fill=BOTH)
+        sperm.pack(anchor="w", padx=25, fill=X)
         sociallbl.pack(anchor="w", padx=25)
-        social.pack(anchor="w", padx=25, fill=BOTH)
+        social.pack(anchor="w", padx=25, fill=X)
         politicallbl.pack(anchor="w", padx=25)
-        political.pack(anchor="w", padx=25, fill=BOTH)
+        political.pack(anchor="w", padx=25, fill=X)
         economiclbl.pack(anchor="w", padx=25)
-        economic.pack(anchor="w", padx=25, fill=BOTH)
+        economic.pack(anchor="w", padx=25, fill=X)
         religionlbl.pack(anchor="w", padx=25)
-        religion.pack(anchor="w", padx=25, fill=BOTH)
+        religion.pack(anchor="w", padx=25, fill=X)
         militarylbl.pack(anchor="w", padx=25)
-        military.pack(anchor="w", padx=25, fill=BOTH)
+        military.pack(anchor="w", padx=25, fill=X)
 
         racial_feature_listlbl.pack(anchor="w", padx=25)
-        racial_feature_list.pack(anchor="w", padx=25, fill=BOTH)
+        racial_feature_list.pack(anchor="w", padx=25, fill=X)
         proficiencies_listlbl.pack(anchor="w", padx=25)
-        proficiencies_list.pack(anchor="w", padx=25, fill=BOTH)
+        proficiencies_list.pack(anchor="w", padx=25, fill=X)
         subclasses_listlbl.pack(anchor="w", padx=25)
-        subclasses_list.pack(anchor="w", padx=25, fill=BOTH)
+        subclasses_list.pack(anchor="w", padx=25, fill=X)
 
+        buffer.pack_forget()
         d20canvas.pack_forget()
 
+        buffer.pack(padx=30)
+
         added_input = True
+
+        enable_scroll("On")
     else:
         community_sizelbl.pack_forget()
         community_size.pack_forget()
@@ -284,9 +292,34 @@ def add_input():
         subclasses_listlbl.pack_forget()
         subclasses_list.pack_forget()
 
+        buffer.pack_forget()
+
+        buffer.pack(padx=30)
         d20canvas.pack(fill=BOTH, expand=True)
 
         added_input = False
+
+        leftcanvas.unbind_all("<MouseWheel>")
+        leftcanvas.unbind("<Enter>")
+        leftcanvas.unbind("<Leave>")
+    return 1
+
+
+# Toggle the ability to Scroll the Left Frame
+def enable_scroll(v):
+    leftcanvas.bind_all(
+        "<MouseWheel>",
+        lambda e: leftcanvas.yview_scroll(int(-1 * (e.delta / 120)), "units"),
+    )
+
+    leftcanvas.bind(
+        "<Enter>",
+        lambda _: leftcanvas.bind_all(
+            "<MouseWheel>",
+            lambda e: leftcanvas.yview_scroll(int(-1 * (e.delta / 120)), "units"),
+        ),
+    )
+    leftcanvas.bind("<Leave>", lambda _: leftcanvas.unbind_all("<MouseWheel>"))
     return 1
 
 
@@ -295,7 +328,7 @@ if __name__ == "__main__":
     # Create gui and Label it
     gui = Tk()
     gui.title("Civilization Generator by Alec Davidson")
-    gui.geometry("950x850")
+    gui.geometry("950x1000")
     gui["background"] = "#999999"
     gui.iconbitmap(os.path.join(local_path, "d20.ico"))
 
@@ -316,6 +349,7 @@ if __name__ == "__main__":
     im_menu.add_command(
         label="Import Resources", command=lambda: dbimport("resources.db")
     )
+    im_menu.add_separator()
     im_menu.add_command(
         label="Rollback Civilizations",
         command=lambda: dbrollback("civilizations.db"),
@@ -339,33 +373,39 @@ if __name__ == "__main__":
     about_menu.add_command(label="About CivGen", command=lambda: about("readme"))
 
     # Create Frames
-    leftframe = Frame(
-        gui,
-        width=450,
-        height=900,
+    leftframe = ttk.Frame(gui)
+    leftcanvas = Canvas(
+        leftframe, background="#999999", highlightthickness=0, width=500, height=1000
     )
-    leftframe.pack(side="left", anchor=NW)
-    leftframe.pack_propagate(0)
-    leftframe["background"] = "#999999"
-    rightframe = Frame(
-        gui,
-        width=500,
-        height=900,
+    leftcanvas.itemconfigure("leftframe")
+    scrollbar = ttk.Scrollbar(leftframe, orient="vertical", command=leftcanvas.yview)
+    scrollable_frame = Frame(leftcanvas, width=500, height=1000)
+    scrollable_frame["background"] = "#999999"
+    scrollable_frame.bind(
+        "<Configure>",
+        lambda e: leftcanvas.configure(scrollregion=leftcanvas.bbox("all")),
     )
-    rightframe.pack(side="right", anchor=NE)
-    rightframe.pack_propagate(0)
-    rightframe["background"] = "#999999"
+    leftcanvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+    leftcanvas.configure(yscrollcommand=scrollbar.set)
+
+    rightframe = ttk.Frame(gui)
+    rightcanvas = Canvas(
+        leftframe, background="#999999", highlightthickness=0, width=450, height=1000
+    )
+    rightcanvas.itemconfigure("rightframe")
+    rightcanvas.create_window((0, 0), anchor="ne")
 
     # Create Title and Output
     Title = tk.Label(
-        leftframe,
+        scrollable_frame,
         text="Civilization Generator",
         bg="#999999",
         font=("Calibri 18 bold underline"),
+        width=31,
     )
-    outputlbl = tk.Label(rightframe, text="Results:", bg="#999999")
+    outputlbl = tk.Label(rightcanvas, text="Results:", bg="#999999")
     output = scrolledtext.ScrolledText(
-        rightframe,
+        rightcanvas,
         wrap=tk.WORD,
         width=450,
         height=700,
@@ -386,110 +426,146 @@ if __name__ == "__main__":
     # Add d20 image
     d20image = Image.open(os.path.join(local_path, "d20.png")).convert("RGBA")
     d20pic = ImageTk.PhotoImage(d20image)
-    d20canvas = Canvas(leftframe, bg="#999999", highlightthickness=0)
-    d20canvas.create_image(200, 400, image=d20pic)
-    # d20lbl = Label(leftframe, image=d20pic)
+    d20canvas = Canvas(scrollable_frame, bg="#999999", highlightthickness=0)
+    d20canvas.create_image(250, 300, anchor="s", image=d20pic)
+    # d20lbl = Label(scrollable_frame, image=d20pic)
 
     # Create User Input Fields and Global Variables
     kingdomlbl = tk.Label(
-        leftframe, text="What is the name of your Kingdom?", bg="#999999"
+        scrollable_frame, text="What is the name of your Kingdom?", bg="#999999"
     )
-    kingdom = tk.Entry(leftframe, relief=tk.SUNKEN)
+    kingdom = tk.Entry(scrollable_frame, relief=tk.SUNKEN)
     kingdom.insert(0, "Kingdom")
     civ_namelbl = tk.Label(
-        leftframe, text="What is the name of your Civilization?", bg="#999999"
+        scrollable_frame, text="What is the name of your Civilization?", bg="#999999"
     )
-    civ_name = tk.Entry(leftframe, relief=tk.SUNKEN)
+    civ_name = tk.Entry(scrollable_frame, relief=tk.SUNKEN)
     civ_name.insert(0, "Civ")
 
     community_sizelbl = tk.Label(
-        leftframe,
+        scrollable_frame,
         text="How would you describe the Size of your Civilization?",
         bg="#999999",
     )
-    community_size = tk.Entry(leftframe, relief=tk.SUNKEN)
+    community_size = tk.Entry(scrollable_frame, relief=tk.SUNKEN)
     spermlbl = tk.Label(
-        leftframe, text="What is the main Focus of your Civilization?", bg="#999999"
+        scrollable_frame,
+        text="What is the main Focus of your Civilization?",
+        bg="#999999",
     )
-    sperm = tk.Entry(leftframe, relief=tk.SUNKEN)
+    sperm = tk.Entry(scrollable_frame, relief=tk.SUNKEN)
 
     sociallbl = tk.Label(
-        leftframe,
+        scrollable_frame,
         text="What is the key Social aspect of your Civilization?",
         bg="#999999",
     )
-    social = tk.Entry(leftframe, relief=tk.SUNKEN)
+    social = tk.Entry(scrollable_frame, relief=tk.SUNKEN)
     politicallbl = tk.Label(
-        leftframe,
+        scrollable_frame,
         text="What is the Policial structure of your Civilization?",
         bg="#999999",
     )
-    political = tk.Entry(leftframe, relief=tk.SUNKEN)
+    political = tk.Entry(scrollable_frame, relief=tk.SUNKEN)
     economiclbl = tk.Label(
-        leftframe, text="What is the primary Export of your Civilization?", bg="#999999"
+        scrollable_frame,
+        text="What is the primary Export of your Civilization?",
+        bg="#999999",
     )
-    economic = tk.Entry(leftframe, relief=tk.SUNKEN)
+    economic = tk.Entry(scrollable_frame, relief=tk.SUNKEN)
     religionlbl = tk.Label(
-        leftframe,
+        scrollable_frame,
         text="What is the nature of your Civilizations Religion?",
         bg="#999999",
     )
-    religion = tk.Entry(leftframe, relief=tk.SUNKEN)
+    religion = tk.Entry(scrollable_frame, relief=tk.SUNKEN)
     militarylbl = tk.Label(
-        leftframe, text="What enforces the law in your Civilization?", bg="#999999"
+        scrollable_frame,
+        text="What enforces the law in your Civilization?",
+        bg="#999999",
     )
-    military = tk.Entry(leftframe, relief=tk.SUNKEN)
+    military = tk.Entry(scrollable_frame, relief=tk.SUNKEN)
 
     racial_feature_listlbl = tk.Label(
-        leftframe,
-        text="What are some features of the families in your Civilization? (Limit 4)",
+        scrollable_frame,
+        text="What are features of the families in your Civilization? (Limit 4)",
         bg="#999999",
     )
-    racial_feature_list = tk.Text(leftframe, width=40, height=4, relief=tk.SUNKEN)
+    racial_feature_list = tk.Text(
+        scrollable_frame, width=40, height=4, relief=tk.SUNKEN
+    )
     proficiencies_listlbl = tk.Label(
-        leftframe,
-        text="What are some skills honed by the people of your Civilization? (Limit 4)",
+        scrollable_frame,
+        text="What skills are honed by the people of your Civilization? (Limit 4)",
         bg="#999999",
     )
-    proficiencies_list = tk.Text(leftframe, width=40, height=4, relief=tk.SUNKEN)
+    proficiencies_list = tk.Text(scrollable_frame, width=40, height=4, relief=tk.SUNKEN)
     subclasses_listlbl = tk.Label(
-        leftframe,
+        scrollable_frame,
         text="What type of Adventurer got their start in your Civilization?\n(Limit 2, alternate lines for 'Class' and 'Subclass')",
         bg="#999999",
         justify=LEFT,
     )
-    subclasses_list = tk.Text(leftframe, width=40, height=4, relief=tk.SUNKEN)
+    subclasses_list = tk.Text(scrollable_frame, width=40, height=4, relief=tk.SUNKEN)
+
+    buffer = tk.Label(
+        scrollable_frame,
+        text="",
+        bg="#999999",
+        justify=LEFT,
+    )
 
     # Create Buttons
     generate = tk.Button(
-        leftframe, relief=tk.RAISED, text="Generate Civilization", command=generate
+        scrollable_frame,
+        relief=tk.RAISED,
+        text="Generate Civilization",
+        command=generate,
     )
     read = tk.Button(
-        leftframe, relief=tk.RAISED, text="Print Saved Civilizations", command=read
+        scrollable_frame,
+        relief=tk.RAISED,
+        text="Print Saved Civilizations",
+        command=read,
     )
     save = tk.Button(
-        leftframe, relief=tk.RAISED, text="Save Latest Civilization", command=save
+        scrollable_frame,
+        relief=tk.RAISED,
+        text="Save Latest Civilization",
+        command=save,
     )
     add_inputbtn = tk.Button(
-        leftframe, relief=tk.RAISED, text="Manually Enter Details", command=add_input
+        scrollable_frame,
+        relief=tk.RAISED,
+        text="Manually Enter Details",
+        command=add_input,
     )
 
     # Pack Fields
     Title.pack()
-    kingdomlbl.pack(anchor="w", padx=25)
-    kingdom.pack(anchor="w", padx=25, fill=BOTH)
-    civ_namelbl.pack(anchor="w", padx=25)
-    civ_name.pack(anchor="w", padx=25, fill=BOTH)
+    kingdomlbl.pack(padx=25)
+    kingdom.pack(padx=25, fill=X)
+    civ_namelbl.pack(padx=25)
+    civ_name.pack(padx=25, fill=X)
 
-    generate.pack(fill=BOTH, pady=(5, 2), padx=70)
-    save.pack(fill=BOTH, padx=70, pady=2)
-    read.pack(fill=BOTH, padx=70, pady=2)
-    add_inputbtn.pack(fill=BOTH, padx=70, pady=2)
+    generate.pack(fill=X, pady=(5, 2), padx=70)
+    save.pack(fill=X, padx=70, pady=2)
+    read.pack(fill=X, padx=70, pady=2)
+    add_inputbtn.pack(fill=X, padx=70, pady=2)
 
+    buffer.pack(padx=30)
     d20canvas.pack(fill=BOTH, expand=True)
 
     outputlbl.pack()
     output.pack(padx=(0, 10), pady=(0, 10))
+
+    rightcanvas.pack(side="right", anchor=NE)
+    rightcanvas.pack_propagate(0)
+
+    leftframe.pack()
+    leftcanvas.pack(side="left", anchor=NW, expand=True)
+
+    scrollbar.pack(side="right", fill="y")
 
     # Open gui
     print("You can minimize this window, but do not close!")
