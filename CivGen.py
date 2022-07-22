@@ -26,10 +26,10 @@ class Civilization:
     ----------
     id : int
             The id used to reference the Civilization in civilizations.db
-    CIV_NAME : str
-            The name of the Civilization (Mandatory Value)
-    KINGDOM : str
-            The name of the Kingdom that the Civilization resides in (Mandatory Value)
+    CIV_NAME : str, required
+            The name of the Civilization
+    KINGDOM : str, required
+            The name of the Kingdom that the Civilization resides in
     COMMUNITY_SIZE : str
             The size or scale of the Civilization
     SPERM : str
@@ -56,19 +56,19 @@ class Civilization:
     READ_DB():
             Queries the DB for an entry in civilizations.db and returns the self.id.
     SAVE_DB():
-                Save Civilization to the civilizations.db and return the id.
+            Save Civilization to the civilizations.db and return the id.
     UPDATE_DB():
-                Update existing entry in civilizations.db and return the self.id.
+            Update existing entry in civilizations.db and return the self.id.
     PRINT_CIV():
-                Print the details of the Civilization with context and return 1.
+            Print the details of the Civilization with context and return 1.
     GET_DB_RANDOM(table):
-                Grab a single entry at random from the given table in resources.db and return the entry.
+            Grab a single entry at random from the given table in resources.db and return the entry.
     BUILD_RANDOM_LIST(table, total):
-                Grab multiple, unique entries at random from the given table in resources.db and return two lists.
+            Grab multiple, unique entries at random from the given table in resources.db and return two lists.
     GEN_CIV():
-                Assigns random values to empty Attributes for the Civilization using the Kingdom and Civ Attributes as a seed and return self.
+            Assigns random values to empty Attributes for the Civilization using the Kingdom and Civ Attributes as a seed and return self.
     BUILD_CIVILIZATION():
-                Takes user assigned attributes and ensures all attributes are valid and non-empty for the Civilization and return self.id.
+            Takes user assigned attributes and ensures all attributes are valid and non-empty for the Civilization and return self.id.
     """
 
     # Initialize the class with variables matching the table headers from the DB
@@ -95,10 +95,10 @@ class Civilization:
         ----------
         id : int
                 The id used to reference the Civilization in civilizations.db
-        CIV_NAME : str
-                The name of the Civilization (Mandatory Value)
-        KINGDOM : str
-                The name of the Kingdom that the Civilization resides in (Mandatory Value)
+        CIV_NAME : str, required
+                The name of the Civilization
+        KINGDOM : str, required
+                The name of the Kingdom that the Civilization resides in
         COMMUNITY_SIZE : str
                 The size or scale of the Civilization
         SPERM : str
@@ -135,12 +135,22 @@ class Civilization:
         self.SUBCLASSES_LIST = SUBCLASSES_LIST
 
     def READ_DB(self):
-        # Format and execute SQL command to Civilization DB
+        """
+        Grabs an entry from civilization.db and updates the attributes of self.
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        self.id : int
+            The id that was updated.
+        """
         sql = f"select * from civilizations where civ_name='{str(self.CIV_NAME)}' and kingdom='{str(self.KINGDOM)}';"
         with civdb:
             civ = civdb.execute(sql)
 
-        # Parse variable and extract values to store in self
         for i in civ:
             self.id = i[0]
             self.CIV_NAME = i[1]
@@ -153,29 +163,24 @@ class Civilization:
             self.RELIGION = i[8]
             self.MILITARY = i[9]
 
-            # Lists are more complex, store to temp variable
             temp_RACIAL_FEATURE = i[10]
             temp_PROFICIENCIES = i[11]
             temp_SUBCLASSES = i[12]
 
-            # Create temp lists
             temp_RACIAL_FEATURE_LIST = []
             temp_PROFICIENCIES_LIST = []
             temp_SUBCLASSES_LIST = []
 
-            # The main table stores the ID of the list, but not the values
-            # Make a new connection and query the additional tables
             with civdb:
                 com = f"select * from racial_feature where id = {temp_RACIAL_FEATURE}"
                 racial_feature = civdb.execute(com)
-                # Nested for loops to store list for easier parsing later
+
                 for i in racial_feature:
                     for j in i:
                         temp_RACIAL_FEATURE_LIST.append(j)
-                # First value is the ID, we don't need that
+
                 del temp_RACIAL_FEATURE_LIST[0]
 
-                # Rinse and Repeat
                 com = f"select * from proficiencies where id = {temp_PROFICIENCIES}"
                 proficiencies = civdb.execute(com)
                 for i in proficiencies:
@@ -183,7 +188,6 @@ class Civilization:
                         temp_PROFICIENCIES_LIST.append(j)
                 del temp_PROFICIENCIES_LIST[0]
 
-                # And again
                 com = f"select * from subclasses where id = {temp_SUBCLASSES}"
                 subclasses = civdb.execute(com)
                 for i in subclasses:
@@ -191,7 +195,6 @@ class Civilization:
                         temp_SUBCLASSES_LIST.append(j)
                 del temp_SUBCLASSES_LIST[0]
 
-            # Now we get to store to self
             self.RACIAL_FEATURE_LIST = temp_RACIAL_FEATURE_LIST
             self.PROFICIENCIES_LIST = temp_PROFICIENCIES_LIST
             self.SUBCLASSES_LIST = temp_SUBCLASSES_LIST
@@ -199,8 +202,20 @@ class Civilization:
         return self.id
 
     def SAVE_DB(self):
-        # Save Racial Features to a separate table on the DB
-        # Format query and data
+        """
+        Saves the attributes of self to civilization.db.
+
+        There are additional tables that store the contents of the lists.
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        id : int
+            The id that was updated.
+        """
         sql_feature = "INSERT INTO racial_feature (feature1,feature2,feature3,feature4) values(?,?,?,?)"
         data_feature = [
             (
@@ -210,16 +225,14 @@ class Civilization:
                 self.RACIAL_FEATURE_LIST[3],
             )
         ]
-        # Connect to Civ DB and execute command
+
         with civdb:
             civdb.executemany(sql_feature, data_feature)
-            # Get the ID of the entry we just created by making a query to sqlite_sequence table
             racial_feature = civdb.execute(
                 "select seq from sqlite_sequence where name = 'racial_feature'"
             )
             racial_feature = [i[0] for i in racial_feature][0]
 
-        # Rinse and Repeat with Proficiencies
         sql_proficiencies = "INSERT INTO proficiencies (proficiency1,proficiency2,proficiency3,proficiency4) values(?,?,?,?)"
         data_proficiencies = [
             (
@@ -236,7 +249,6 @@ class Civilization:
             )
             proficiencies = [i[0] for i in proficiencies][0]
 
-        # And Again with Subclasses
         sql_class = (
             "INSERT INTO subclasses (class1,subclass1,class2,subclass2) values(?,?,?,?)"
         )
@@ -255,7 +267,6 @@ class Civilization:
             )
             subclasses = [i[0] for i in subclasses][0]
 
-        # Finally, for Civilization we do the same as above, but with the ID references stored instead of the actual data for the lists
         sql = f"INSERT INTO civilizations (civ_name,kingdom,community_size,sperm,social,political,economic,religion,military,racial_feature,proficiencies,subclasses) values(?,?,?,?,?,?,?,?,?,?,?,?)"
         data = [
             (
@@ -284,7 +295,21 @@ class Civilization:
         return id
 
     def UPDATE_DB(self):
-        # Get ids for other tables
+        """
+        Update the civilization.db with the attributes of self.
+
+        There are additional tables that store the contents of the lists.
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        self.id : int
+            The id that was updated.
+        """
+
         sql_ids = f"select racial_feature,proficiencies,subclasses from civilizations where id='{int(self.id)}';"
         with civdb:
             idlist = []
@@ -293,7 +318,6 @@ class Civilization:
                 idlist.append(i)
         idlist = idlist[0]
 
-        # Starting with Racial Features, Update the table
         sql_feature = "UPDATE racial_feature SET feature1 = ? , feature2 = ? , feature3 = ? , feature4 = ? WHERE id = ?"
         data_feature = [
             (
@@ -307,7 +331,6 @@ class Civilization:
         with civdb:
             civdb.executemany(sql_feature, data_feature)
 
-        # You know the drill... Proficiencies
         sql_proficiencies = "UPDATE proficiencies SET proficiency1 = ? , proficiency2 = ? , proficiency3 = ? , proficiency4 = ? WHERE id = ?"
         data_proficiencies = [
             (
@@ -321,7 +344,6 @@ class Civilization:
         with civdb:
             civdb.executemany(sql_proficiencies, data_proficiencies)
 
-        # Yup... Subclasses
         sql_class = "UPDATE subclasses SET class1 = ? , subclass1 = ? , class2 = ? , subclass2 = ? WHERE id = ?"
         data_class = [
             (
@@ -335,8 +357,6 @@ class Civilization:
         with civdb:
             civdb.executemany(sql_class, data_class)
 
-        # Finally... Civilization
-        # Note, we store the IDs of the other tables instead of the full lists.
         sql = f"UPDATE civilizations SET civ_name = ? , kingdom = ? , community_size = ? , sperm = ? , social = ? , political = ? , economic = ? , religion = ? , military = ? , racial_feature = ? , proficiencies  = ? , subclasses = ? WHERE id = ?"
         data = [
             (
@@ -362,7 +382,18 @@ class Civilization:
         return self.id
 
     def PRINT_CIV(self):
-        # It prints
+        """
+        Prints out the attributes from self.
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+        """
+
         print("")
         print(
             f"{self.CIV_NAME} is a {self.COMMUNITY_SIZE} in {self.KINGDOM} with a large focus on its {self.SPERM}."
@@ -394,18 +425,27 @@ class Civilization:
             f"Adventurers who have found their start in {self.CIV_NAME} tend to become {self.SUBCLASSES_LIST[1]}s ({self.SUBCLASSES_LIST[0]}) or {self.SUBCLASSES_LIST[3]}s ({self.SUBCLASSES_LIST[2]})"
         )
 
-        return 1
+        return
 
     def GET_DB_RANDOM(self, table):
-        # Just need to know what table to use for the lookup
+        """
+        Pulls random entries from resources.db
+
+        Parameters
+        ----------
+        table : str, required
+            The table from resources.db to search
+
+        Returns
+        -------
+        entry : str
+            A random entry from resources.db
+        """
         with resources:
-            # Get the total size of the table
             limit = resources.execute(f"select count() from {table};")
-            # Format for functionality
             limit = [i[0] for i in limit][0]
-            # Random entry
             id = random.randint(1, limit)
-            # Grab entry
+
             try:
                 entry = resources.execute(
                     f"select name,type,description from {table} where id = {id};"
@@ -420,14 +460,29 @@ class Civilization:
                 entry = resources.execute(f"select name from {table} where id = {id};")
                 entry = [i[0] for i in entry][0]
 
-            # Final Result is returned
             return entry
 
     def BUILD_RANDOM_LIST(self, table, total):
+        """
+        Use GET_DB_RANDOM to pull random entries and create a list of unique values.
+
+        Parameters
+        ----------
+        table : str, required
+            The table from resources.db to search
+        total : str, required
+            The number of entries to pull
+
+        Returns
+        -------
+        list : list
+            Each entry in the list contains 2 values, a name and a description (if available)
+        list2 : list
+            Each entry in the list contains a type relating to the same entry in the first list
+        """
         list = []
         list2 = []
-        # Use for/while loops to check for duplicates
-        for i in range(total):
+        for i in range(total):  # Check for duplicates
             temp = self.GET_DB_RANDOM(table)
             for i in range(len(list)):
                 if temp[1] == list2[i]:
@@ -442,9 +497,16 @@ class Civilization:
         return list, list2
 
     def GEN_CIV(self):
-        # Use the name of the Civilization as a seed for random
+        """
+        Use the name of the Civilization as a seed for random.
+
+        Set each string attributes using GET_DB_RANDOM. Set each list attributes using BUILD_RANDOM_LIST.
+
+        Returns
+        -------
+        self
+        """
         random.seed(str(self.CIV_NAME) + str(self.KINGDOM))
-        # Set each single field using GET_DB_RANDOM
         self.COMMUNITY_SIZE = self.GET_DB_RANDOM(table="COMMUNITY_SIZE_LIST")
         self.SPERM = self.GET_DB_RANDOM(table="SPERM_LIST")
         self.SOCIAL = self.GET_DB_RANDOM(table="SOCIAL_LIST")
@@ -453,8 +515,6 @@ class Civilization:
         self.RELIGION = self.GET_DB_RANDOM(table="RELIGION_LIST")
         self.MILITARY = self.GET_DB_RANDOM(table="MILITARY_LIST")
 
-        # Set lists using BUILD_RANDOM_LIST and formating output
-        # Racial Features List
         RACIAL_FEATURE_LIST = []
         temp_RACIAL_FEATURE_LIST = self.BUILD_RANDOM_LIST(
             table="RACIAL_FEATURE", total=4
@@ -466,7 +526,6 @@ class Civilization:
             )
         self.RACIAL_FEATURE_LIST = RACIAL_FEATURE_LIST
 
-        # Proficiencies List
         PROFICIENCIES_LIST = []
         temp_PROFICIENCIES_LIST = self.BUILD_RANDOM_LIST(
             table="PROFICIENCIES", total=4
@@ -478,7 +537,6 @@ class Civilization:
             )
         self.PROFICIENCIES_LIST = PROFICIENCIES_LIST
 
-        # Subclass List
         SUBCLASSES_LIST = []
         temp_SUBCLASSES_LIST = self.BUILD_RANDOM_LIST(table="CLASS_LIST", total=2)
         SUBCLASSES_LIST.append(temp_SUBCLASSES_LIST[0][0][0])
