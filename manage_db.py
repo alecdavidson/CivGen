@@ -60,7 +60,7 @@ def Export_DB(database):
     # Close connection
     conn.close()
 
-    return f"Exported {database} to {local_path}"
+    return f"Exported {database} to {local_path}."
 
 
 # Backup current DB, delete it, and Convert CSVs to a new DB

@@ -1,11 +1,8 @@
 """
-CivGen by Alec Davidson
+by Alec Davidson
 """
-## Import Modules
 import argparse, manage_db, os, random, sqlite3 as sl, sys
 
-## Global References
-# Ensure DB files exist and connect
 db_path = os.path.join(os.environ["APPDATA"], "CivGen")
 manage_db.Create_DB()
 
@@ -47,14 +44,17 @@ class Civilization:
     RACIAL_FEATURE_LIST : list
             A list of Features common in the races that live in the Civilization
     PROFICIENCIES_LIST : list
-            A list of Proficiencies commonly found by anyone that lives in the Civilization
+            A list of Proficiencies commonly found by anyone that lives in the
+            Civilization
     SUBCLASSES_LIST : list
-            A list of Classes/Subclasses that indiviuals of the Civilization may take
+            A list of Classes/Subclasses that indiviuals of the Civilization may
+            take
 
     Methods
     -------
     READ_DB():
-            Queries the DB for an entry in civilizations.db and returns the self.id.
+            Queries the DB for an entry in civilizations.db and returns the
+            self.id.
     SAVE_DB():
             Save Civilization to the civilizations.db and return the id.
     UPDATE_DB():
@@ -62,16 +62,19 @@ class Civilization:
     PRINT_CIV():
             Print the details of the Civilization with context and return 1.
     GET_DB_RANDOM(table):
-            Grab a single entry at random from the given table in resources.db and return the entry.
+            Grab a single entry at random from the given table in resources.db
+            and return the entry.
     BUILD_RANDOM_LIST(table, total):
-            Grab multiple, unique entries at random from the given table in resources.db and return two lists.
+            Grab multiple, unique entries at random from the given table in
+            resources.db and return two lists.
     GEN_CIV():
-            Assigns random values to empty Attributes for the Civilization using the Kingdom and Civ Attributes as a seed and return self.
+            Assigns random values to empty Attributes for the Civilization using
+            the Kingdom and Civ Attributes as a seed and return self.
     BUILD_CIVILIZATION():
-            Takes user assigned attributes and ensures all attributes are valid and non-empty for the Civilization and return self.id.
+            Takes user assigned attributes and ensures all attributes are valid
+            and non-empty for the Civilization and return self.id.
     """
 
-    # Initialize the class with variables matching the table headers from the DB
     def __init__(
         self,
         id=-1,
@@ -114,11 +117,14 @@ class Civilization:
         RELIGION : str
                 The primary Religious belief of the Civilization
         RACIAL_FEATURE_LIST : list
-                A list of Features common in the races that live in the Civilization
+                A list of Features common in the races that live in the
+                Civilization
         PROFICIENCIES_LIST : list
-                A list of Proficiencies commonly found by anyone that lives in the Civilization
+                A list of Proficiencies commonly found by anyone that lives in
+                the Civilization
         SUBCLASSES_LIST : list
-                A list of Classes/Subclasses that indiviuals of the Civilization may take
+                A list of Classes/Subclasses that indiviuals of the Civilization
+                may take
         """
         self.id = id
         self.CIV_NAME = CIV_NAME
@@ -464,7 +470,8 @@ class Civilization:
 
     def BUILD_RANDOM_LIST(self, table, total):
         """
-        Use GET_DB_RANDOM to pull random entries and create a list of unique values.
+        Use GET_DB_RANDOM to pull random entries and create a list of unique
+        values.
 
         Parameters
         ----------
@@ -476,9 +483,11 @@ class Civilization:
         Returns
         -------
         list : list
-            Each entry in the list contains 2 values, a name and a description (if available)
+            Each entry in the list contains 2 values, a name and a description
+            (if available)
         list2 : list
-            Each entry in the list contains a type relating to the same entry in the first list
+            Each entry in the list contains a type relating to the same entry in
+            the first list
         """
         list = []
         list2 = []
@@ -500,7 +509,8 @@ class Civilization:
         """
         Use the name of the Civilization as a seed for random.
 
-        Set each string attributes using GET_DB_RANDOM. Set each list attributes using BUILD_RANDOM_LIST.
+        Set each string attributes using GET_DB_RANDOM. Set each list attributes
+        using BUILD_RANDOM_LIST.
 
         Returns
         -------
@@ -549,17 +559,21 @@ class Civilization:
 
     def BUILD_CIVILIZATION(self):
         """
-        Takes user assigned attributes and ensures all attributes are valid and non-empty for the Civilization and return self.id.
+        Takes user assigned attributes and ensures all attributes are valid and
+        non-empty for the Civilization and return self.id.
 
-                Store manually entered attributes to local variables.
+        Store manually entered attributes to local variables.
 
-        Create a second Civilization object (base) with the same CIV_NAME and KINGDOM execute GEN_CIV().
+        Create a second Civilization object (base) with the same CIV_NAME and
+        KINGDOM execute GEN_CIV().
 
-                Execute READ_DB() to pull values saved in the DB.
+        Execute READ_DB() to pull values saved in the DB.
 
-        If the Civilization is not in the DB, or the user indicated an attribute should be reset, overwrite the Attribute in self with the value from base.
+        If the Civilization is not in the DB, or the user indicated an attribute
+        should be reset, overwrite the Attribute in self with the value from
+        base.
 
-                Save remaining manually entered values to the attributes of self.
+        Save remaining manually entered values to the attributes of self.
 
         Returns
         -------
@@ -643,11 +657,24 @@ class Civilization:
         return self.id
 
 
-## Global Functions
-# Get a list of all saved Civilizations
 def READ_LIST(kingdom):
-    # Connect to Civilizations DB and grab all civ_names
-    # If a Kingdom has been provided, only search for civilizations under that Kingdom
+    """
+    Connect to civilizations.db and grab all civ_names, parsing through the
+    returned data and stored for easier use.
+    If a Kingdom has been provided, only search for civilizations under that
+    Kingdom
+
+    Parameters
+    ----------
+    kingdom : str, optional
+        A specific to pull entries from (default is None)
+
+    Returns
+    -------
+    civ_name_list : list
+        A list containing the id, CIV_NAME, and KINGDOM attributes from entries
+        in civilizations.db
+    """
     if kingdom == "":
         sql = "select id,civ_name,kingdom from civilizations;"
     else:
@@ -655,7 +682,6 @@ def READ_LIST(kingdom):
     with civdb:
         civ_list = civdb.execute(sql)
 
-    # Parse through the returned data and restore for easier use
     civ_name_list = []
     for i in civ_list:
         civ_name_list.append(f"({i[0]}) {i[1]} in {i[2]}")
@@ -663,10 +689,21 @@ def READ_LIST(kingdom):
     return civ_name_list
 
 
-# In order to use the Import and Export functions from manage_db in the executable
-# I need to be able to close the connection to the DB while inserting
-# So I created shell programs that close the connection while calling manage_db, and then reconnect to db
 def Import_DB(db):
+    """
+    In order to use the Import and Export functions from manage_db,
+    I need to close the current connection to the DB and then reopen afterwards.
+
+    Parameters
+    ----------
+    db : str, required
+        The database that should be updated.
+
+    Returns
+    -------
+    result : str
+        Should be "Import Complete." if there were no issues.
+    """
     global civdb, resources
     civdb.close()
     resources.close()
@@ -676,8 +713,22 @@ def Import_DB(db):
     return result
 
 
-# Export follows the same as above for consistancy
 def Export_DB(db):
+    """
+    In order to use the Import and Export functions from manage_db,
+    I need to close the current connection to the DB and then reopen afterwards.
+
+    Parameters
+    ----------
+    db : str, required
+        The database that should be updated.
+
+    Returns
+    -------
+    result : str
+        Should be "Exported {database} to {local_path}." if there were no
+        issues.
+    """
     global civdb, resources
     civdb.close()
     resources.close()
@@ -687,8 +738,22 @@ def Export_DB(db):
     return result
 
 
-# Export follows the same as above for consistancy
 def dbrollback(db):
+    """
+    In order to use the Rollback function from manage_db,
+    I need to close the current connection to the DB and then reopen afterwards.
+
+    Parameters
+    ----------
+    db : str, required
+        The database that should be updated.
+
+    Returns
+    -------
+    result : str
+        Should be "{database} rolledback to previous saved version." if there
+        were no issues.
+    """
     global civdb, resources
     civdb.close()
     resources.close()
@@ -698,7 +763,6 @@ def dbrollback(db):
     return result
 
 
-## Execute
 if __name__ == "__main__":
     # Parse the CLI for manually entered entities
     parser = (
