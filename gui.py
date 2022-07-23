@@ -1,4 +1,6 @@
-## Imports
+"""
+by Alec Davidson
+"""
 import CivGen, os, sys, tkinter as tk
 import ctypes
 from CivGen import Civilization, READ_LIST
@@ -7,8 +9,7 @@ from tkinter import *
 from tkinter import Canvas, Menu, scrolledtext, ttk
 from PIL import Image, ImageTk
 
-# Auto Scaling
-ctypes.windll.shcore.SetProcessDpiAwareness(1)
+ctypes.windll.shcore.SetProcessDpiAwareness(1)  # Auto Scaling
 
 # Close Splash Screen
 try:
@@ -18,7 +19,6 @@ try:
 except:
     pass
 
-## Establish Functions and Variables
 civ = ""
 added_input = False
 
@@ -27,13 +27,13 @@ try:
 except:
     local_path = os.path.abspath(".")
 
-# Read entries from civilizations.db
+
 def read():
-    # Grab global variables
+    """Read entries from civilizations.db using funcitons from CivGen"""
     global kingdom
-    # Execute READ_LIST()
+
     civ_list = READ_LIST(kingdom.get())
-    # Print to CLI and output
+
     print(civ_list)
     output.insert(END, "City in Kingdom\n------------------------------\n")
     for i in civ_list:
@@ -42,11 +42,15 @@ def read():
     output.insert(END, "_____________________________________________\n\n")
     output.see(END)
 
-    return 1
+    return
 
 
-# Save latest generated Civilization to civilizations.db
 def save():
+    """Save latest generated Civilization to civilizations.db using funcitons
+    from CivGen
+
+
+    """
     global civ
     new_id = civ.id
     if civ.id == -1:
@@ -59,13 +63,13 @@ def save():
     output.insert(END, "\n_____________________________________________\n\n")
     output.see(END)
 
-    return 1
+    return
 
 
-# Create Civilization object and execute BUILD_CIVILIZATION()
 def generate():
+    """Create Civilization object and execute BUILD_CIVILIZATION()"""
     global civ
-    # Fromat List Inputs
+
     racial_feature_list_formated = [
         racial_feature_list.get("1.0", "1.0 lineend"),
         racial_feature_list.get("2.0", "2.0 lineend"),
@@ -84,7 +88,7 @@ def generate():
         subclasses_list.get("3.0", "3.0 lineend"),
         subclasses_list.get("4.0", "4.0 lineend"),
     ]
-    # Create Civilization Object
+
     civ = Civilization(
         CIV_NAME=civ_name.get(),
         KINGDOM=kingdom.get(),
@@ -100,9 +104,9 @@ def generate():
         SUBCLASSES_LIST=subclass_list_formated,
     )
     id = civ.BUILD_CIVILIZATION()
-    # Print in CMD with PRINT_CIV()
+
     civ.PRINT_CIV()
-    # Format Output
+
     output.insert(END, civ.CIV_NAME, "Entry")
     output.insert(END, " is a ")
     output.insert(END, civ.COMMUNITY_SIZE, "Entry")
@@ -180,40 +184,55 @@ def generate():
     output.insert(END, "_____________________________________________\n\n")
     output.see(END)
 
-    return 1
+    return
 
 
-# Convert CSVs to DB
 def dbimport(db):
+    """Convert CSVs to DB
+
+    :param db:
+
+    """
     result = CivGen.Import_DB(db)
     output.insert(END, f"\n-- {result} --\n")
     return 1
 
 
-# Export DB content into CSVs
 def dbexport(db):
+    """Export DB content into CSVs
+
+    :param db:
+
+    """
     result = CivGen.Export_DB(db)
     output.insert(END, f"\n-- {result} --\n")
     return 1
 
 
-# Rollback DB to previous version
 def dbrollback(db):
+    """Rollback DB to previous version
+
+    :param db:
+
+    """
     result = CivGen.dbrollback(db)
     output.insert(END, f"\n-- {result} --\n")
     return 1
 
 
-# Create a new window with information
 def about(about_type):
-    # Create new Window
+    """Create a new window with information
+
+    :param about_type:
+
+    """
+
     about_window = Tk()
     about_window.title("Civilization Generator by Alec Davidson")
     about_window.geometry("750x650")
     about_window["background"] = "#999999"
     about_window.iconbitmap(os.path.join(local_path, "d20.ico"))
 
-    # Open file
     data = ""
     if about_type == "readme":
         aboutf = open(os.path.join(local_path, "README.md"), "r")
@@ -226,16 +245,15 @@ def about(about_type):
     else:
         pass
 
-    # pack textbox with text
     textbox = Text(about_window)
     textbox.insert(END, data)
     textbox.pack(expand=True, fill=BOTH)
 
-    return 1
+    return
 
 
-# Allow for User input for other details
 def add_input():
+    """Allow for User input for other details"""
     global added_input
 
     if added_input == False:
@@ -302,11 +320,15 @@ def add_input():
         leftcanvas.unbind_all("<MouseWheel>")
         leftcanvas.unbind("<Enter>")
         leftcanvas.unbind("<Leave>")
-    return 1
+    return
 
 
-# Toggle the ability to Scroll the Left Frame
 def enable_scroll(v):
+    """Toggle the ability to Scroll the Left Frame
+
+    :param v:
+
+    """
     leftcanvas.bind_all(
         "<MouseWheel>",
         lambda e: leftcanvas.yview_scroll(int(-1 * (e.delta / 120)), "units"),
@@ -323,7 +345,6 @@ def enable_scroll(v):
     return 1
 
 
-## Execute
 if __name__ == "__main__":
     # Create gui and Label it
     gui = Tk()
@@ -335,6 +356,7 @@ if __name__ == "__main__":
     # Create the Menubar
     menubar = Menu(gui)
     gui.config(menu=menubar)
+
     # Import and Export
     imex_menu = Menu(menubar, tearoff=False)
     ex_menu = Menu(menubar, tearoff=False)
