@@ -14,10 +14,10 @@ civdb = sl.connect(civdbdb)
 
 
 class Civilization:
-    """
-    A Class to represent a Civilization
+    """A Class to represent a Civilization
 
     ...
+
 
     Attributes
     ----------
@@ -48,8 +48,6 @@ class Civilization:
             Civilization
     SUBCLASSES_LIST : list
             A list of Classes/Subclasses that indiviuals of the Civilization may
-            take
-
     Methods
     -------
     READ_DB():
@@ -141,17 +139,10 @@ class Civilization:
         self.SUBCLASSES_LIST = SUBCLASSES_LIST
 
     def READ_DB(self):
-        """
-        Grabs an entry from civilization.db and updates the attributes of self.
+        """Grabs an entry from civilization.db and updates the attributes of self.
 
-        Parameters
-        ----------
-        None
+        :param None:
 
-        Returns
-        -------
-        self.id : int
-            The id that was updated.
         """
         sql = f"select * from civilizations where civ_name='{str(self.CIV_NAME)}' and kingdom='{str(self.KINGDOM)}';"
         with civdb:
@@ -208,19 +199,12 @@ class Civilization:
         return self.id
 
     def SAVE_DB(self):
-        """
-        Saves the attributes of self to civilization.db.
+        """Saves the attributes of self to civilization.db.
 
         There are additional tables that store the contents of the lists.
 
-        Parameters
-        ----------
-        None
+        :param None:
 
-        Returns
-        -------
-        id : int
-            The id that was updated.
         """
         sql_feature = "INSERT INTO racial_feature (feature1,feature2,feature3,feature4) values(?,?,?,?)"
         data_feature = [
@@ -301,19 +285,12 @@ class Civilization:
         return id
 
     def UPDATE_DB(self):
-        """
-        Update the civilization.db with the attributes of self.
+        """Update the civilization.db with the attributes of self.
 
         There are additional tables that store the contents of the lists.
 
-        Parameters
-        ----------
-        None
+        :param None:
 
-        Returns
-        -------
-        self.id : int
-            The id that was updated.
         """
 
         sql_ids = f"select racial_feature,proficiencies,subclasses from civilizations where id='{int(self.id)}';"
@@ -388,16 +365,10 @@ class Civilization:
         return self.id
 
     def PRINT_CIV(self):
-        """
-        Prints out the attributes from self.
+        """Prints out the attributes from self.
 
-        Parameters
-        ----------
-        None
+        :param None:
 
-        Returns
-        -------
-        None
         """
 
         print("")
@@ -434,18 +405,11 @@ class Civilization:
         return
 
     def GET_DB_RANDOM(self, table):
-        """
-        Pulls random entries from resources.db
+        """Pulls random entries from resources.db
 
-        Parameters
-        ----------
-        table : str, required
-            The table from resources.db to search
+        :param table: The table from resources.db to search
+        :type table: str, required
 
-        Returns
-        -------
-        entry : str
-            A random entry from resources.db
         """
         with resources:
             limit = resources.execute(f"select count() from {table};")
@@ -469,25 +433,14 @@ class Civilization:
             return entry
 
     def BUILD_RANDOM_LIST(self, table, total):
-        """
-        Use GET_DB_RANDOM to pull random entries and create a list of unique
+        """Use GET_DB_RANDOM to pull random entries and create a list of unique
         values.
 
-        Parameters
-        ----------
-        table : str, required
-            The table from resources.db to search
-        total : str, required
-            The number of entries to pull
+        :param table: The table from resources.db to search
+        :type table: str, required
+        :param total: The number of entries to pull
+        :type total: str, required
 
-        Returns
-        -------
-        list : list
-            Each entry in the list contains 2 values, a name and a description
-            (if available)
-        list2 : list
-            Each entry in the list contains a type relating to the same entry in
-            the first list
         """
         list = []
         list2 = []
@@ -506,15 +459,12 @@ class Civilization:
         return list, list2
 
     def GEN_CIV(self):
-        """
-        Use the name of the Civilization as a seed for random.
+        """Use the name of the Civilization as a seed for random.
 
         Set each string attributes using GET_DB_RANDOM. Set each list attributes
         using BUILD_RANDOM_LIST.
 
-        Returns
-        -------
-        self
+
         """
         random.seed(str(self.CIV_NAME) + str(self.KINGDOM))
         self.COMMUNITY_SIZE = self.GET_DB_RANDOM(table="COMMUNITY_SIZE_LIST")
@@ -558,8 +508,7 @@ class Civilization:
         return self
 
     def BUILD_CIVILIZATION(self):
-        """
-        Takes user assigned attributes and ensures all attributes are valid and
+        """Takes user assigned attributes and ensures all attributes are valid and
         non-empty for the Civilization and return self.id.
 
         Store manually entered attributes to local variables.
@@ -575,9 +524,7 @@ class Civilization:
 
         Save remaining manually entered values to the attributes of self.
 
-        Returns
-        -------
-        self.id
+
         """
         COMMUNITY_SIZE = self.COMMUNITY_SIZE
         SPERM = self.SPERM
@@ -658,22 +605,14 @@ class Civilization:
 
 
 def READ_LIST(kingdom):
-    """
-    Connect to civilizations.db and grab all civ_names, parsing through the
+    """Connect to civilizations.db and grab all civ_names, parsing through the
     returned data and stored for easier use.
     If a Kingdom has been provided, only search for civilizations under that
     Kingdom
 
-    Parameters
-    ----------
-    kingdom : str, optional
-        A specific to pull entries from (default is None)
+    :param kingdom: A specific to pull entries from (default is None)
+    :type kingdom: str, optional
 
-    Returns
-    -------
-    civ_name_list : list
-        A list containing the id, CIV_NAME, and KINGDOM attributes from entries
-        in civilizations.db
     """
     if kingdom == "":
         sql = "select id,civ_name,kingdom from civilizations;"
@@ -690,19 +629,12 @@ def READ_LIST(kingdom):
 
 
 def Import_DB(db):
-    """
-    In order to use the Import and Export functions from manage_db,
+    """In order to use the Import and Export functions from manage_db,
     I need to close the current connection to the DB and then reopen afterwards.
 
-    Parameters
-    ----------
-    db : str, required
-        The database that should be updated.
+    :param db: The database that should be updated.
+    :type db: str, required
 
-    Returns
-    -------
-    result : str
-        Should be "Import Complete." if there were no issues.
     """
     global civdb, resources
     civdb.close()
@@ -714,20 +646,12 @@ def Import_DB(db):
 
 
 def Export_DB(db):
-    """
-    In order to use the Import and Export functions from manage_db,
+    """In order to use the Import and Export functions from manage_db,
     I need to close the current connection to the DB and then reopen afterwards.
 
-    Parameters
-    ----------
-    db : str, required
-        The database that should be updated.
+    :param db: The database that should be updated.
+    :type db: str, required
 
-    Returns
-    -------
-    result : str
-        Should be "Exported {database} to {local_path}." if there were no
-        issues.
     """
     global civdb, resources
     civdb.close()
@@ -739,20 +663,12 @@ def Export_DB(db):
 
 
 def dbrollback(db):
-    """
-    In order to use the Rollback function from manage_db,
+    """In order to use the Rollback function from manage_db,
     I need to close the current connection to the DB and then reopen afterwards.
 
-    Parameters
-    ----------
-    db : str, required
-        The database that should be updated.
+    :param db: The database that should be updated.
+    :type db: str, required
 
-    Returns
-    -------
-    result : str
-        Should be "{database} rolledback to previous saved version." if there
-        were no issues.
     """
     global civdb, resources
     civdb.close()
