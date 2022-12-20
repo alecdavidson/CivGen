@@ -59,7 +59,7 @@ def Export_DB(database):
     for i in db_all_table_names:
         db_tables = pd.read_sql_query(f"SELECT * FROM {i[0]}", conn)
         db_tables.to_csv(
-            f"{database.replace('.db','')}/{i[0]}.csv", sep="\t", index=False
+            f"{database.replace('.db','')}/{i[0]}.csv", sep=",", index=False
         )
     conn.close()
 
@@ -108,7 +108,7 @@ def Import_DB(database, backup=True):
             rows = []
             for l in table_file:
                 if count == 0:
-                    columns = l.replace("\n", "").split("\t")
+                    columns = l.replace("\n", "").split(",")
                     col_string = ""
                     for m in columns:
                         if col_string == "":
@@ -119,7 +119,7 @@ def Import_DB(database, backup=True):
                             col_string += f", {m} varchar(255) NOT NULL"
                     cursor.execute(f"create table {table_name} ({col_string})")
                 else:
-                    row = l.replace("\n", "").split("\t")
+                    row = l.replace("\n", "").split(",")
                     row_string = ""
                     rows.append(row)
                     col_string = ""
